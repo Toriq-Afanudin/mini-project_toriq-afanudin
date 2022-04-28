@@ -37,5 +37,7 @@ func main() {
 
 	r.POST("/daftar/setting/tambah", controllers.Setting_tambah)
 
+	r.POST("/daftar/kehadiran/tambah", controllers.Kehadiran_tambah)
+
 	r.Run()
 }
