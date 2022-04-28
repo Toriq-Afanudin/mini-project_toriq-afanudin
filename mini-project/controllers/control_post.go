@@ -9,18 +9,11 @@ import (
 )
 
 //TAMBAH DATA
-type Setting_presensi_oleh_dosen struct {
-	Id_setting          int    `json:"id_setting"`
-	Id_kelas            int    `json:"id_kelas"`
-	Tanggal_perkuliahan string `json:"tanggal_perkuliahan"`
-	Jam_perkuliahan     string `json:"jam_perkuliahan"`
-}
-
 func Setting_tambah(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 
 	//validasi input/masukan
-	var setting_data_input Setting_presensi_oleh_dosen
+	var setting_data_input models.Setting_presensi_oleh_dosen
 	if err := c.ShouldBindJSON(&setting_data_input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
