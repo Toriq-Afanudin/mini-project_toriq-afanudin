@@ -32,11 +32,9 @@ func main() {
 	r.GET("/daftar/kelas", controllers.Kelas_tampil)
 
 	r.GET("/daftar/setting", controllers.Setting_tampil)
-
-	r.GET("/daftar/kehadiran", controllers.Kehadiran_tampil)
-
 	r.POST("/daftar/setting/tambah", controllers.Setting_tambah)
 
+	r.GET("/daftar/kehadiran", controllers.Kehadiran_tampil)
 	r.POST("/daftar/kehadiran/tambah", controllers.Kehadiran_tambah)
 
 	r.Run()
