@@ -31,8 +31,8 @@ func main() {
 
 	r.GET("/kelas", controllers.Kelas_tampil)
 
-	r.GET("/penjadwalan", controllers.Setting_tampil)
-	r.POST("/penjadwalan/tambah", controllers.Setting_tambah)
+	r.GET("/penjadwalan", controllers.Penjadwalan)
+	r.POST("/penjadwalan/tambah", controllers.Penjadwalan_tambah)
 
 	r.GET("/kehadiran", controllers.Kehadiran_tampil)
 	r.POST("/kehadiran/tambah", controllers.Kehadiran_tambah)

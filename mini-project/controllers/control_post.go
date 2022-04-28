@@ -9,22 +9,22 @@ import (
 )
 
 //TAMBAH DATA
-func Setting_tambah(c *gin.Context) {
+func Penjadwalan_tambah(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 
 	//validasi input/masukan
-	var setting_data_input models.Setting_presensi_oleh_dosen
-	if err := c.ShouldBindJSON(&setting_data_input); err != nil {
+	var Penjadwalan models.Penjadwalan
+	if err := c.ShouldBindJSON(&Penjadwalan); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	//proses input
-	setting := models.Setting_presensi_oleh_dosen{
-		Id_setting:          setting_data_input.Id_setting,
-		Id_kelas:            setting_data_input.Id_kelas,
-		Tanggal_perkuliahan: setting_data_input.Tanggal_perkuliahan,
-		Jam_perkuliahan:     setting_data_input.Jam_perkuliahan,
+	setting := models.Penjadwalan{
+		Id_penjadwalan:      Penjadwalan.Id_penjadwalan,
+		Id_kelas:            Penjadwalan.Id_kelas,
+		Tanggal_perkuliahan: Penjadwalan.Tanggal_perkuliahan,
+		Jam_perkuliahan:     Penjadwalan.Jam_perkuliahan,
 	}
 
 	db.Create(&setting)

@@ -33,18 +33,18 @@ func Kelas_tampil(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": Daftar_kelas})
 }
 
-func Setting_tampil(c *gin.Context) {
+func Penjadwalan(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 
-	var Daftar_setting []models.Setting_presensi_oleh_dosen
-	db.Find(&Daftar_setting)
-	c.JSON(http.StatusOK, gin.H{"data": Daftar_setting})
+	var Penjadwalan []models.Penjadwalan
+	db.Find(&Penjadwalan)
+	c.JSON(http.StatusOK, gin.H{"data": Penjadwalan})
 }
 
 func Kehadiran_tampil(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 
-	var Daftar_kehadiran []models.Setting_presensi_oleh_dosen
+	var Daftar_kehadiran []models.Penjadwalan
 	db.Find(&Daftar_kehadiran)
 	c.JSON(http.StatusOK, gin.H{"data": Daftar_kehadiran})
 }

@@ -20,8 +20,8 @@ type Kelas struct {
 	Id_dosen       string `json:"id_dosen"`
 }
 
-type Setting_presensi_oleh_dosen struct {
-	Id_setting          int    `json:"id_setting"`
+type Penjadwalan struct {
+	Id_penjadwalan      int    `json:"id_penjadwalan"`
 	Id_kelas            int    `json:"id_kelas"`
 	Tanggal_perkuliahan string `json:"tanggal_perkuliahan"`
 	Jam_perkuliahan     string `json:"jam_perkuliahan"`
