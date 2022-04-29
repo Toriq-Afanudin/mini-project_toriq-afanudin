@@ -71,18 +71,18 @@ func Penjadwalan_ubah(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": Jadwal})
 }
 
-//DATA HAPUS (DELETE)
+//HAPUS DATA (DELETE)
 func Penjadwalan_hapus(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 
-	var Jadwal Data_input
+	var Jadwal models.Penjadwalan
 	if err := db.Where("id_penjadwalan = ?", c.Param("id_penjadwalan")).First(&Jadwal).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Data mahasiswa tidak di temukan"})
 		return
 	}
 
-	//proses ubah data
-	db.Delete(&Jadwal)
+	//proses hapus data
+	db.Where("id_penjadwalan = ?", c.Param("id_penjadwalan")).Delete(&Jadwal)
 
 	c.JSON(http.StatusOK, gin.H{"data": true})
 }
