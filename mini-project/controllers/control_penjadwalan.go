@@ -24,7 +24,7 @@ func Penjadwalan_tambah(c *gin.Context) {
 	//validasi input/masukan
 	var Penjadwalan models.Penjadwalan
 	if err := c.ShouldBindJSON(&Penjadwalan); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "DATA BUKAN JSON"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
