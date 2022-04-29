@@ -33,3 +33,12 @@ type Kehadiran struct {
 	Id_setting   int `json:"id_setting"`
 	Kehadiran    int `json:"kehadiran"`
 }
+
+type Akumulasi_per_kelas struct {
+	Id_akumulasi       int `json:"id_akumulasi"`
+	Id_mahasiswa       int `json:"id_mahasiswa"`
+	Id_kelas           int `json:"id_kelas"`
+	Jumlah_kelas       int `json:"jumlah_kelas"`
+	Jumlah_hadir       int `json:"jumlah_hadir"`
+	Jumlah_tidak_hadir int `json:"jumlah_tidak_hadir"`
+}
