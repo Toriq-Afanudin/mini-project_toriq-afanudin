@@ -8,6 +8,13 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
+type Data_input_kehadiran struct {
+	Id_kehadiran int `json:"id_kehadiran"`
+	Id_mahasiswa int `json:"id_mahasiswa"`
+	Id_setting   int `json:"id_setting"`
+	Kehadiran    int `json:"kehadiran"`
+}
+
 //TAMPIL DATA
 func Kehadiran_tampil(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
@@ -21,7 +28,7 @@ func Kehadiran_tambah(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 
 	//validasi input/masukan
-	var setting_data_input models.Kehadiran
+	var setting_data_input Data_input_kehadiran
 	if err := c.ShouldBindJSON(&setting_data_input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -38,4 +45,43 @@ func Kehadiran_tambah(c *gin.Context) {
 	db.Create(&setting)
 
 	c.JSON(http.StatusOK, gin.H{"data": setting})
+}
+
+//UBAH DATA (PUT)
+func Kehadiran_ubah(c *gin.Context) {
+	db := c.MustGet("db").(*gorm.DB)
+
+	var Presensi models.Penjadwalan
+	if err := db.Where("id_kehadiran = ?", c.Param("id_kehadiran")).First(&Presensi).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	//validasi input/masukan
+	var dataInput Data_input_kehadiran
+	if err := c.ShouldBindJSON(&dataInput); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	//proses ubah data
+	db.Model(&Presensi).Update(dataInput)
+
+	c.JSON(http.StatusOK, gin.H{"data": Presensi})
+}
+
+//HAPUS DATA (DELETE)
+func Kehadiran_hapus(c *gin.Context) {
+	db := c.MustGet("db").(*gorm.DB)
+
+	var Presensi models.Penjadwalan
+	if err := db.Where("id_kehadiran = ?", c.Param("id_kehadiran")).First(&Presensi).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Data mahasiswa tidak di temukan"})
+		return
+	}
+
+	//proses hapus data
+	db.Where("id_kehadiran = ?", c.Param("id_kehadiran")).Delete(&Presensi)
+
+	c.JSON(http.StatusOK, gin.H{"data": true})
 }

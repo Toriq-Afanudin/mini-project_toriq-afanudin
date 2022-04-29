@@ -16,7 +16,7 @@ type Data_input struct {
 }
 
 //TAMPIL DATA (GET)
-func Penjadwalan(c *gin.Context) {
+func Penjadwalan_tampil(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 
 	var Penjadwalan []models.Penjadwalan

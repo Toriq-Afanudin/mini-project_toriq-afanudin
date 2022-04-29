@@ -31,13 +31,15 @@ func main() {
 
 	r.GET("/kelas", controllers.Kelas_tampil)
 
-	r.GET("/penjadwalan", controllers.Penjadwalan)
+	r.GET("/penjadwalan", controllers.Penjadwalan_tampil)
 	r.POST("/penjadwalan", controllers.Penjadwalan_tambah)
 	r.PUT("/penjadwalan/:id_penjadwalan", controllers.Penjadwalan_ubah)
 	r.DELETE("/penjadwalan/:id_penjadwalan", controllers.Penjadwalan_hapus)
 
 	r.GET("/kehadiran", controllers.Kehadiran_tampil)
 	r.POST("/kehadiran", controllers.Kehadiran_tambah)
+	r.PUT("/kehadiran/:id_kehadiran", controllers.Kehadiran_ubah)
+	r.DELETE("/kehadiran/:id_kehadiran", controllers.Kehadiran_hapus)
 
 	r.Run()
 }
