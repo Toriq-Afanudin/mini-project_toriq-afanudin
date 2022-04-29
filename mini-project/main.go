@@ -33,6 +33,8 @@ func main() {
 
 	r.GET("/penjadwalan", controllers.Penjadwalan)
 	r.POST("/penjadwalan", controllers.Penjadwalan_tambah)
+	r.PUT("/penjadwalan/:id_penjadwalan", controllers.Penjadwalan_ubah)
+	r.DELETE("/penjadwalan/:id_penjadwalan", controllers.Penjadwalan_hapus)
 
 	r.GET("/kehadiran", controllers.Kehadiran_tampil)
 	r.POST("/kehadiran", controllers.Kehadiran_tambah)
