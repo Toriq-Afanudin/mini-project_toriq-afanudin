@@ -8,28 +8,13 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-//TAMBAH DATA
-func Penjadwalan_tambah(c *gin.Context) {
+//TAMPIL DATA
+func Kehadiran_tampil(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 
-	//validasi input/masukan
-	var Penjadwalan models.Penjadwalan
-	if err := c.ShouldBindJSON(&Penjadwalan); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	//proses input
-	setting := models.Penjadwalan{
-		Id_penjadwalan:      Penjadwalan.Id_penjadwalan,
-		Id_kelas:            Penjadwalan.Id_kelas,
-		Tanggal_perkuliahan: Penjadwalan.Tanggal_perkuliahan,
-		Jam_perkuliahan:     Penjadwalan.Jam_perkuliahan,
-	}
-
-	db.Create(&setting)
-
-	c.JSON(http.StatusOK, gin.H{"data": setting})
+	var Daftar_kehadiran []models.Penjadwalan
+	db.Find(&Daftar_kehadiran)
+	c.JSON(http.StatusOK, gin.H{"data": Daftar_kehadiran})
 }
 
 func Kehadiran_tambah(c *gin.Context) {
