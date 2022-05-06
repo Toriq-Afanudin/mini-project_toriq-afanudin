@@ -9,17 +9,16 @@ import (
 )
 
 type Data_input_kehadiran struct {
-	Id_kehadiran int `json:"id_kehadiran"`
-	Id_mahasiswa int `json:"id_mahasiswa"`
-	Id_setting   int `json:"id_setting"`
-	Kehadiran    int `json:"kehadiran"`
+	Id_penjadwalan int `json:"id_setting"`
+	Nama_mahasiswa int `json:"nama_mahasiswa"`
+	Kehadiran      int `json:"kehadiran"`
 }
 
 //TAMPIL DATA
 func Kehadiran_tampil(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 
-	var Daftar_kehadiran []models.Penjadwalan
+	var Daftar_kehadiran []models.Kehadiran
 	db.Find(&Daftar_kehadiran)
 	c.JSON(http.StatusOK, gin.H{"data": Daftar_kehadiran})
 }
@@ -36,10 +35,9 @@ func Kehadiran_tambah(c *gin.Context) {
 
 	//proses input
 	setting := models.Kehadiran{
-		Id_kehadiran: setting_data_input.Id_kehadiran,
-		Id_mahasiswa: setting_data_input.Id_mahasiswa,
-		Id_setting:   setting_data_input.Id_setting,
-		Kehadiran:    setting_data_input.Kehadiran,
+		Id_penjadwalan: setting_data_input.Id_penjadwalan,
+		Nama_mahasiswa: setting_data_input.Nama_mahasiswa,
+		Kehadiran:      setting_data_input.Kehadiran,
 	}
 
 	db.Create(&setting)

@@ -28,10 +28,9 @@ type Penjadwalan struct {
 }
 
 type Kehadiran struct {
-	Id_kehadiran int `json:"id_kehadiran"`
-	Id_mahasiswa int `json:"id_mahasiswa"`
-	Id_setting   int `json:"id_setting"`
-	Kehadiran    int `json:"kehadiran"`
+	Id_penjadwalan int `json:"id_penjadwalan"`
+	Nama_mahasiswa int `json:"nama_mahasiswa"`
+	Kehadiran      int `json:"kehadiran"`
 }
 
 type Akumulasi_per_kelas struct {

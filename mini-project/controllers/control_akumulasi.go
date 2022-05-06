@@ -9,6 +9,9 @@ import (
 )
 
 type Data_input_akumulasi struct {
+	Id_akumulasi       int `json:"id_akumulasi"`
+	Id_mahasiswa       int `json:"id_mahasiswa"`
+	Id_kelas           int `json:"id_kelas"`
 	Jumlah_kelas       int `json:"jumlah_kelas"`
 	Jumlah_hadir       int `json:"jumlah_hadir"`
 	Jumlah_tidak_hadir int `json:"jumlah_tidak_hadir"`
@@ -33,7 +36,7 @@ func Akumulasi_ubah(c *gin.Context) {
 		return
 	}
 
-	//validasi input/masukan
+	// validasi input/masukan
 	var dataInput Data_input_akumulasi
 	if err := c.ShouldBindJSON(&dataInput); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
