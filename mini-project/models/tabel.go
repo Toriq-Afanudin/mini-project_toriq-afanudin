@@ -6,12 +6,6 @@ type Daftar_mahasiswa struct {
 	Nim          string `json:"nim"`
 }
 
-type Dosen_pengampu struct {
-	Id_dosen     int    `json:"id_dosen"`
-	Nama         string `json:"nama"`
-	Niy_nidn_nip string `json:"niy_nidn_nip"`
-}
-
 type Kelas struct {
 	Id_kelas       int    `json:"id_kelas"`
 	Kode           string `json:"kode"`
