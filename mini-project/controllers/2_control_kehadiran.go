@@ -10,7 +10,7 @@ import (
 
 type Data_input_kehadiran struct {
 	Id_penjadwalan int `json:"id_setting"`
-	Nama_mahasiswa int `json:"nama_mahasiswa"`
+	Id_mahasiswa   int `json:"id_mahasiswa"`
 	Kehadiran      int `json:"kehadiran"`
 }
 
@@ -36,7 +36,7 @@ func Kehadiran_tambah(c *gin.Context) {
 	//proses input
 	setting := models.Kehadiran{
 		Id_penjadwalan: setting_data_input.Id_penjadwalan,
-		Nama_mahasiswa: setting_data_input.Nama_mahasiswa,
+		Id_mahasiswa:   setting_data_input.Id_mahasiswa,
 		Kehadiran:      setting_data_input.Kehadiran,
 	}
 

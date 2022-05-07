@@ -7,8 +7,9 @@ type Daftar_mahasiswa struct {
 }
 
 type Dosen_pengampu struct {
-	Id_dosen int    `json:"id_dosen"`
-	Nama     string `json:"nama"`
+	Id_dosen     int    `json:"id_dosen"`
+	Nama         string `json:"nama"`
+	NIY_NIDN_NIP string `json:"NIY_NIDN_NIP"`
 }
 
 type Kelas struct {
@@ -29,7 +30,7 @@ type Penjadwalan struct {
 
 type Kehadiran struct {
 	Id_penjadwalan int `json:"id_penjadwalan"`
-	Nama_mahasiswa int `json:"nama_mahasiswa"`
+	Id_mahasiswa   int `json:"id_mahasiswa"`
 	Kehadiran      int `json:"kehadiran"`
 }
 
