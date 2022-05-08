@@ -49,7 +49,7 @@ func Kehadiran_tambah(c *gin.Context) {
 func Kehadiran_ubah(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 
-	var Presensi models.Penjadwalan
+	var Presensi models.Kehadiran
 	if err := db.Where("id_kehadiran = ?", c.Param("id_kehadiran")).First(&Presensi).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -72,7 +72,7 @@ func Kehadiran_ubah(c *gin.Context) {
 func Kehadiran_hapus(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 
-	var Presensi models.Penjadwalan
+	var Presensi models.Kehadiran
 	if err := db.Where("id_kehadiran = ?", c.Param("id_kehadiran")).First(&Presensi).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Data mahasiswa tidak di temukan"})
 		return
