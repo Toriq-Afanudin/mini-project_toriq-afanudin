@@ -8,6 +8,7 @@ type Penjadwalan struct {
 }
 
 type Kehadiran struct {
+	Id_kehadiran   int `json:"id_kehadiran"`
 	Id_penjadwalan int `json:"id_penjadwalan"`
 	Id_mahasiswa   int `json:"id_mahasiswa"`
 	Kehadiran      int `json:"kehadiran"`

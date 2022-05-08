@@ -9,7 +9,8 @@ import (
 )
 
 type Data_input_kehadiran struct {
-	Id_penjadwalan int `json:"id_setting"`
+	Id_kehadiran   int `json:"id_kehadiran"`
+	Id_penjadwalan int `json:"id_penjadwalan"`
 	Id_mahasiswa   int `json:"id_mahasiswa"`
 	Kehadiran      int `json:"kehadiran"`
 }
@@ -35,6 +36,7 @@ func Kehadiran_tambah(c *gin.Context) {
 
 	//proses input
 	setting := models.Kehadiran{
+		Id_kehadiran:   setting_data_input.Id_kehadiran,
 		Id_penjadwalan: setting_data_input.Id_penjadwalan,
 		Id_mahasiswa:   setting_data_input.Id_mahasiswa,
 		Kehadiran:      setting_data_input.Kehadiran,
@@ -63,7 +65,7 @@ func Kehadiran_ubah(c *gin.Context) {
 	}
 
 	//proses ubah data
-	db.Model(&Presensi).Update(dataInput)
+	db.Where("id_kehadiran = ?", c.Param("id_kehadiran")).Model(&Presensi).Update(dataInput)
 
 	c.JSON(http.StatusOK, gin.H{"data": Presensi})
 }

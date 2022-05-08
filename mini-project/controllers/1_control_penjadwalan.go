@@ -66,7 +66,7 @@ func Penjadwalan_ubah(c *gin.Context) {
 	}
 
 	//proses ubah data
-	db.Model(&Jadwal).Update(dataInput)
+	db.Where("id_penjadwalan = ?", c.Param("id_penjadwalan")).Model(&Jadwal).Update(dataInput)
 
 	c.JSON(http.StatusOK, gin.H{"data": Jadwal})
 }
