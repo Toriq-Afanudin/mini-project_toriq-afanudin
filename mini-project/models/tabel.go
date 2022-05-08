@@ -34,7 +34,6 @@ type Kelas struct {
 	Matakuliah     string `json:"matakuliah"`
 	Kelas          string `json:"kelas"`
 	Dosen_pengampu string `json:"dosen_pengampu"`
-	Id_dosen       string `json:"id_dosen"`
 }
 
 type Daftar_mahasiswa struct {
