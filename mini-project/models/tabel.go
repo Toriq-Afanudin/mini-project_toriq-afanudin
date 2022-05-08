@@ -1,5 +1,12 @@
 package models
 
+type Penjadwalan struct {
+	Id_penjadwalan      int    `json:"id_penjadwalan"`
+	Id_kelas            int    `json:"id_kelas"`
+	Tanggal_perkuliahan string `json:"tanggal_perkuliahan"`
+	Jam_perkuliahan     string `json:"jam_perkuliahan"`
+}
+
 type Kehadiran struct {
 	Id_penjadwalan int `json:"id_penjadwalan"`
 	Id_mahasiswa   int `json:"id_mahasiswa"`

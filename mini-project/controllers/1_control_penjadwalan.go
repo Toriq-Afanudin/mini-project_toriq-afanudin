@@ -1,19 +1,12 @@
 package controllers
 
 import (
+	"mini_project/models"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 )
-
-//TERHUBUNG KE DATABASE
-type Penjadwalan struct {
-	Id_penjadwalan      int    `json:"id_penjadwalan"`
-	Id_kelas            int    `json:"id_kelas"`
-	Tanggal_perkuliahan string `json:"tanggal_perkuliahan"`
-	Jam_perkuliahan     string `json:"jam_perkuliahan"`
-}
 
 type Data_input struct {
 	Id_penjadwalan      int    `json:"id_penjadwalan"`
@@ -26,7 +19,7 @@ type Data_input struct {
 func Penjadwalan_tampil(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 
-	var Jadwal []Penjadwalan
+	var Jadwal []models.Penjadwalan
 	db.Find(&Jadwal)
 	c.JSON(http.StatusOK, gin.H{"data": Jadwal})
 }
@@ -43,7 +36,7 @@ func Penjadwalan_tambah(c *gin.Context) {
 	}
 
 	//proses input
-	setting := Data_input{
+	setting := models.Penjadwalan{
 		Id_penjadwalan:      Input.Id_penjadwalan,
 		Id_kelas:            Input.Id_kelas,
 		Tanggal_perkuliahan: Input.Tanggal_perkuliahan,
@@ -59,7 +52,7 @@ func Penjadwalan_tambah(c *gin.Context) {
 func Penjadwalan_ubah(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 
-	var Jadwal Penjadwalan
+	var Jadwal models.Penjadwalan
 	if err := db.Where("id_penjadwalan = ?", c.Param("id_penjadwalan")).First(&Jadwal).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -82,7 +75,7 @@ func Penjadwalan_ubah(c *gin.Context) {
 func Penjadwalan_hapus(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 
-	var Jadwal Penjadwalan
+	var Jadwal models.Penjadwalan
 	if err := db.Where("id_penjadwalan = ?", c.Param("id_penjadwalan")).First(&Jadwal).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Data mahasiswa tidak di temukan"})
 		return
