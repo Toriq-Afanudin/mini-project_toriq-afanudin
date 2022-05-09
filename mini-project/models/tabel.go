@@ -24,9 +24,9 @@ type Akumulasi_per_kelas struct {
 }
 
 type Dosen_pengampu struct {
-	Id_dosen     int    `json:"id_dosen"`
-	Nama         string `json:"nama"`
-	Niy_nidn_nip string `json:"niy_nidn_nip"`
+	Id_dosen     int
+	Nama         string
+	Niy_nidn_nip string
 }
 
 type Kelas struct {
