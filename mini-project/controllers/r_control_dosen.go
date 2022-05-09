@@ -8,6 +8,8 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
+var Daftar []interface{}
+
 //TAMPIL DATA
 func Dosen_pengampu_tampil(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)

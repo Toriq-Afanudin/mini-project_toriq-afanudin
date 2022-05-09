@@ -24,9 +24,9 @@ type Akumulasi_per_kelas struct {
 }
 
 type Dosen_pengampu struct {
-	Id_dosen     int
-	Nama         string
-	Niy_nidn_nip string
+	Id_dosen     string `gorm:"column:id_dosen"`
+	Nama         string `gorm:"column:nama"`
+	Niy_nidn_nip string `gorm:"column:niy_nidn_nip"`
 }
 
 type Kelas struct {
