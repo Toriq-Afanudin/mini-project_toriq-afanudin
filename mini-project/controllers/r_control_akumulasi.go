@@ -4,6 +4,8 @@ import (
 	"mini_project/models"
 	"net/http"
 
+	"fmt"
+
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 )
@@ -18,33 +20,46 @@ type Data_input_akumulasi struct {
 }
 
 //TAMPIL DATA (GET)
-func Akumulasi_tampil(c *gin.Context) {
+func Akumulasi_kelas_teori_ring_B(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
+	var Hadir []models.Kehadiran
+	var Mahasiswa []models.Daftar_mahasiswa
+	db.Find(&Hadir)
+	db.Find(&Mahasiswa)
 
-	var Akumulasi []models.Akumulasi_per_kelas
-	db.Find(&Akumulasi)
-	c.JSON(http.StatusOK, gin.H{"data": Akumulasi})
-}
+	var j models.Kehadiran
+	var d models.Daftar_mahasiswa
+	var Id_mahasiswa []int
+	var Kehadiran []int
+	var Nama_mahasiswa []string
 
-//UBAH DATA (PUT)
-func Akumulasi_ubah(c *gin.Context) {
-	db := c.MustGet("db").(*gorm.DB)
-
-	var Akumulasi models.Akumulasi_per_kelas
-	if err := db.Where("id_akumulasi = ?", c.Param("id_akumulasi")).First(&Akumulasi).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+	for i := 0; i < 21; i++ {
+		j = Hadir[i]
+		Id_mahasiswa = append(Id_mahasiswa, j.Id_mahasiswa)
+		Kehadiran = append(Kehadiran, j.Kehadiran)
 	}
 
-	// validasi input/masukan
-	var dataInput Data_input_akumulasi
-	if err := c.ShouldBindJSON(&dataInput); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+	for i := 0; i < 7; i++ {
+		d = Mahasiswa[i]
+		Nama_mahasiswa = append(Nama_mahasiswa, d.Nama)
 	}
 
-	//proses ubah data
-	db.Model(&Akumulasi).Update(dataInput)
+	fmt.Println(Id_mahasiswa)
+	fmt.Println(Kehadiran)
+	fmt.Println(Nama_mahasiswa)
 
-	c.JSON(http.StatusOK, gin.H{"data": Akumulasi})
+	var Unix_id_mahasiswa []int
+	for i := 1; 1 <= 7; i++ {
+		Unix_id_mahasiswa = append(Unix_id_mahasiswa, i)
+	}
+
+	var Jumlah int
+	for i := 0; i < 21; i++ {
+		if Unix_id_mahasiswa[0] == Id_mahasiswa[i] {
+			Jumlah++
+		}
+	}
+	fmt.Println(Jumlah)
+
+	c.JSON(http.StatusOK, gin.H{"data": "Akumulasi Berhasil Dilakukan"})
 }

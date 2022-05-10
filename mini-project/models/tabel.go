@@ -10,6 +10,7 @@ type Penjadwalan struct {
 type Kehadiran struct {
 	Id_kehadiran   int `json:"id_kehadiran"`
 	Id_penjadwalan int `json:"id_penjadwalan"`
+	Id_kelas       int `json:"id_kelas"`
 	Id_mahasiswa   int `json:"id_mahasiswa"`
 	Kehadiran      int `json:"kehadiran"`
 }
@@ -24,9 +25,9 @@ type Akumulasi_per_kelas struct {
 }
 
 type Dosen_pengampu struct {
-	Id_dosen     string `gorm:"column:id_dosen"`
-	Nama         string `gorm:"column:nama"`
-	Niy_nidn_nip string `gorm:"column:niy_nidn_nip"`
+	Id_dosen     string `json:"id_dosen"`
+	Nama         string `json:"nama"`
+	Niy_nidn_nip string `json:"niy_nidn_nip"`
 }
 
 type Kelas struct {
