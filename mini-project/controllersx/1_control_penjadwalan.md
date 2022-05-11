@@ -10,7 +10,8 @@ import (
 
 type Data_input struct {
 	Id_penjadwalan      int    `json:"id_penjadwalan"`
-	Id_kelas            int    `json:"id_kelas"`
+	Matakuliah          string `json:"matakuliah"`
+	Dosen_pengampu      string `json:"dosen_pengampu_tanpa_gelar"`
 	Tanggal_perkuliahan string `json:"tanggal_perkuliahan"`
 	Jam_perkuliahan     string `json:"jam_perkuliahan"`
 }
@@ -37,7 +38,8 @@ func Penjadwalan_tambah(c *gin.Context) {
 	//proses input
 	setting := models.Penjadwalan{
 		Id_penjadwalan:      Input.Id_penjadwalan,
-		Id_kelas:            Input.Id_kelas,
+		Matakuliah:          Input.Matakuliah,
+		Dosen_pengampu:      Input.Dosen_pengampu,
 		Tanggal_perkuliahan: Input.Tanggal_perkuliahan,
 		Jam_perkuliahan:     Input.Jam_perkuliahan,
 	}

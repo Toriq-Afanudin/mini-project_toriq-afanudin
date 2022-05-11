@@ -9,11 +9,11 @@ import (
 )
 
 type Data_input_kehadiran struct {
-	Id_kehadiran   int `json:"id_kehadiran"`
-	Id_penjadwalan int `json:"id_penjadwalan"`
-	Id_kelas       int `json:"id_kelas"`
-	Id_mahasiswa   int `json:"id_mahasiswa"`
-	Kehadiran      int `json:"kehadiran"`
+	Id_kehadiran        int    `json:"id_kehadiran"`
+	Matakuliah          string `json:"matakuliah"`
+	Nama_mahasiswa      string `json:"nama_mahasiswa"`
+	Tanggal_perkuliahan string `json:"tanggal_perkuliahan"`
+	Kehadiran           int    `json:"kehadiran"`
 }
 
 //TAMPIL DATA
@@ -37,11 +37,11 @@ func Kehadiran_tambah(c *gin.Context) {
 
 	//proses input
 	setting := models.Kehadiran{
-		Id_kehadiran:   setting_data_input.Id_kehadiran,
-		Id_penjadwalan: setting_data_input.Id_penjadwalan,
-		Id_kelas:       setting_data_input.Id_kelas,
-		Id_mahasiswa:   setting_data_input.Id_mahasiswa,
-		Kehadiran:      setting_data_input.Kehadiran,
+		Id_kehadiran:        setting_data_input.Id_kehadiran,
+		Matakuliah:          setting_data_input.Matakuliah,
+		Nama_mahasiswa:      setting_data_input.Nama_mahasiswa,
+		Tanggal_perkuliahan: setting_data_input.Tanggal_perkuliahan,
+		Kehadiran:           setting_data_input.Kehadiran,
 	}
 
 	db.Create(&setting)

@@ -1,27 +1,19 @@
 package models
 
 type Penjadwalan struct {
-	Id_penjadwalan      int    `json:"id_penjadwalan"`
-	Id_kelas            int    `json:"id_kelas"`
-	Tanggal_perkuliahan string `json:"tanggal_perkuliahan"`
-	Jam_perkuliahan     string `json:"jam_perkuliahan"`
+	Id_penjadwalan             int    `json:"id_penjadwalan"`
+	Matakuliah                 string `json:"matakuliah"`
+	Dosen_pengampu_tanpa_gelar string `json:"dosen_pengampu_tanpa_gelar"`
+	Tanggal_perkuliahan        string `json:"tanggal_perkuliahan"`
+	Jam_perkuliahan            string `json:"jam_perkuliahan"`
 }
 
 type Kehadiran struct {
-	Id_kehadiran   int `json:"id_kehadiran"`
-	Id_penjadwalan int `json:"id_penjadwalan"`
-	Id_kelas       int `json:"id_kelas"`
-	Id_mahasiswa   int `json:"id_mahasiswa"`
-	Kehadiran      int `json:"kehadiran"`
-}
-
-type Akumulasi_per_kelas struct {
-	Id_akumulasi       int `json:"id_akumulasi"`
-	Id_mahasiswa       int `json:"id_mahasiswa"`
-	Id_kelas           int `json:"id_kelas"`
-	Jumlah_pertemuan   int `json:"jumlah_pertemuan"`
-	Jumlah_hadir       int `json:"jumlah_hadir"`
-	Jumlah_tidak_hadir int `json:"jumlah_tidak_hadir"`
+	Id_kehadiran        int    `json:"id_kehadiran"`
+	Matakuliah          string `json:"matakuliah"`
+	Nama_mahasiswa      string `json:"nama_mahasiswa"`
+	Tanggal_perkuliahan string `json:"tanggal_perkuliahan"`
+	Kehadiran           int    `json:"kehadiran"`
 }
 
 type Dosen_pengampu struct {
@@ -31,15 +23,21 @@ type Dosen_pengampu struct {
 }
 
 type Kelas struct {
-	Id_kelas       int    `json:"id_kelas"`
-	Kode           string `json:"kode"`
-	Matakuliah     string `json:"matakuliah"`
-	Kelas          string `json:"kelas"`
-	Dosen_pengampu string `json:"dosen_pengampu"`
+	Id_kelas                   int    `json:"id_kelas"`
+	Kode                       string `json:"kode"`
+	Matakuliah                 string `json:"matakuliah"`
+	Kelas                      string `json:"kelas"`
+	Dosen_pengampu             string `json:"dosen_pengampu"`
+	Dosen_pengampu_tanpa_gelar string `json:"dosen_pengampu_tanpa_gelar"`
 }
 
 type Daftar_mahasiswa struct {
 	Id_mahasiswa int    `json:"id_mahasiswa"`
 	Nama         string `json:"nama"`
 	Nim          string `json:"nim"`
+}
+
+type Jam_perkuliahan struct {
+	Id_jam          int    `json:"Id_jam"`
+	Jam_perkuliahan string `json:"jam_perkuliahan"`
 }
