@@ -41,7 +41,7 @@ func main() {
 	r.PUT("/kehadiran/:id_kehadiran", controllers.Kehadiran_ubah)
 	r.DELETE("/kehadiran/:id_kehadiran", controllers.Kehadiran_hapus)
 
-	r.GET("/akumulasi", controllers.Akumulasi_kelas_teori_ring_B)
+	r.GET("/akumulasi", controllers.Akumulasi)
 
 	r.Run()
 }
