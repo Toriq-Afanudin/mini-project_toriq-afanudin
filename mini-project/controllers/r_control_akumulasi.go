@@ -19,24 +19,49 @@ type Data_input_akumulasi struct {
 
 //TAMPIL DATA (GET)
 func Akumulasi(c *gin.Context) {
+	//KONEKSI KE DATABASE
 	db := c.MustGet("db").(*gorm.DB)
-	var Hadir []models.Kehadiran
-	var Mahasiswa []models.Daftar_mahasiswa
-	db.Find(&Hadir)
-	db.Find(&Mahasiswa)
 
+	//MENGAMBIL DATA DARI TABEL PRESENSI KEHADIRAN
+	var Hadir []models.Kehadiran
+	db.Find(&Hadir)
 	var j models.Kehadiran
-	var d models.Daftar_mahasiswa
 	var Id_mahasiswa []int
 	var Kehadiran []int
 	var Kelas []int
-
-	//MENGAMBIL DATA DARI TABEL PRESENSI KEHADIRAN
 	for i := 0; i < len(Hadir); i++ {
 		j = Hadir[i]
 		Id_mahasiswa = append(Id_mahasiswa, j.Id_mahasiswa)
 		Kehadiran = append(Kehadiran, j.Kehadiran)
 		Kelas = append(Kelas, j.Id_kelas)
+	}
+
+	//MENGAMBIL DATA DARI TABEL NAMA MAHASISWA
+	var Mahasiswa []models.Daftar_mahasiswa
+	db.Find(&Mahasiswa)
+	var d models.Daftar_mahasiswa
+	var Nama_mahasiswa []string
+	for i := 0; i < len(Mahasiswa[0:7]); i++ {
+		d = Mahasiswa[i]
+		Nama_mahasiswa = append(Nama_mahasiswa, d.Nama)
+	}
+
+	//SORTIR UNIX ID MAHASISWA
+	var Unix_id_mahasiswa []int
+	Unix_id_mahasiswa = append(Unix_id_mahasiswa, Id_mahasiswa[0])
+	if Id_mahasiswa[1] != Id_mahasiswa[0] {
+		Unix_id_mahasiswa = append(Unix_id_mahasiswa, Id_mahasiswa[1])
+	}
+	for i := 2; i < len(Hadir); i++ {
+		var Jumlah int
+		for m := i - 1; m >= 0; m-- {
+			if Id_mahasiswa[i] == Id_mahasiswa[m] {
+				Jumlah++
+			}
+		}
+		if Jumlah == 0 {
+			Unix_id_mahasiswa = append(Unix_id_mahasiswa, Id_mahasiswa[i])
+		}
 	}
 
 	//PRESENSI KELAS ILMU DAKWAH
@@ -66,31 +91,6 @@ func Akumulasi(c *gin.Context) {
 		if Kelas[i] == 3 {
 			Matematika_diskret = append(Matematika_diskret, Id_mahasiswa[i])
 			Kehadiran_matematika_diskret = append(Kehadiran_matematika_diskret, Kehadiran[i])
-		}
-	}
-
-	//MENGAMBIL DATA NAMA MAHASISWA
-	var Nama_mahasiswa []string
-	for i := 0; i < len(Mahasiswa[0:7]); i++ {
-		d = Mahasiswa[i]
-		Nama_mahasiswa = append(Nama_mahasiswa, d.Nama)
-	}
-
-	//SORTIR UNIX ID MAHASISWA
-	var Unix_id_mahasiswa []int
-	Unix_id_mahasiswa = append(Unix_id_mahasiswa, Id_mahasiswa[0])
-	if Id_mahasiswa[1] != Id_mahasiswa[0] {
-		Unix_id_mahasiswa = append(Unix_id_mahasiswa, Id_mahasiswa[1])
-	}
-	for i := 2; i < len(Hadir); i++ {
-		var Jumlah int
-		for m := i - 1; m >= 0; m-- {
-			if Id_mahasiswa[i] == Id_mahasiswa[m] {
-				Jumlah++
-			}
-		}
-		if Jumlah == 0 {
-			Unix_id_mahasiswa = append(Unix_id_mahasiswa, Id_mahasiswa[i])
 		}
 	}
 
