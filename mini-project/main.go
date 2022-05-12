@@ -25,11 +25,11 @@ func main() {
 		c.JSON(http.StatusOK, gin.H{"data": "Sistem Presensi Mahasiswa"})
 	})
 
-	// r.GET("/dosen", controllers.Dosen_pengampu_tampil)
+	r.GET("/dosen", controllers.Dosen)
 
-	// r.GET("/kelas", controllers.Kelas_tampil)
+	r.GET("/kelas", controllers.Kelas)
 
-	// r.GET("/mahasiswa", controllers.Daftar_mahasiswa_tampil)
+	r.GET("/mahasiswa", controllers.Mahasiswa)
 
 	r.GET("/penjadwalan", controllers.Get_penjadwalan)
 	r.POST("/penjadwalan", controllers.Post_penjadwalan)
