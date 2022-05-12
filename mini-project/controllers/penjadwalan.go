@@ -53,23 +53,23 @@ func Post_penjadwalan(c *gin.Context) {
 	}
 
 	//MEMASTIKAN MATAKULIAH DAN DOSEN PENGAMPU YANG DI INPUT ADA DALAM TABEL KELAS
-	var hitung1 int
+	var validasi1 int
 	for i := 0; i < len(matakuliah); i++ {
 		if Input.Matakuliah == matakuliah[i] {
-			hitung1++
+			validasi1++
 		}
 	}
-	if hitung1 == 0 {
+	if validasi1 == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"Error": "Matakuliah yang Anda input tidak ditemukan"})
 
 	}
-	var hitung2 int
+	var validasi2 int
 	for i := 0; i < len(dosen); i++ {
 		if Input.Dosen_pengampu_tanpa_gelar == dosen[i] {
-			hitung2++
+			validasi2++
 		}
 	}
-	if hitung2 == 0 {
+	if validasi2 == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"Error": "Nama Dosen yang Anda input tidak ditemukan"})
 
 	}
@@ -85,13 +85,13 @@ func Post_penjadwalan(c *gin.Context) {
 	}
 
 	//MEMASTIKAN JAM PERKULIAHAN ADA
-	var hitung3 int
+	var validasi3 int
 	for i := 0; i < len(jam_kuliah); i++ {
 		if Input.Jam_perkuliahan == jam_kuliah[i] {
-			hitung3++
+			validasi3++
 		}
 	}
-	if hitung3 == 0 {
+	if validasi3 == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"Error": "Jam perkuliahan yang Anda input tidak ditemukan"})
 
 	}
@@ -109,20 +109,22 @@ func Post_penjadwalan(c *gin.Context) {
 	}
 
 	//MEMASTIKAN TANGGAL DAN JAM BELUM DIGUNAKAN
-	var hitung4 int
+	var validasi4 int
 	if tanggal != nil {
 		for i := len(tanggal) - 1; i >= 0; i-- {
 			if (Input.Tanggal_perkuliahan+"T00:00:00+07:00" == tanggal[i]) && (Input.Jam_perkuliahan == jam[i]) {
-				hitung4++
+				validasi4++
 			}
 		}
-		if hitung4 != 0 {
+		if validasi4 != 0 {
 			c.JSON(http.StatusBadRequest, gin.H{"Error": "Tanggal dan jam perkuliahan sudah digunakan"})
 		}
 	}
 
+	//MEMASTIKAN JUMLAH PERTEMUAN TIDAK LEBIH DARI 7
+
 	//JIKA MATAKULIAH DAN DOSEN DAN JAM PERKULIAHAN ADA MAKA DATA AKAN DI INPUTKAN
-	if (hitung1 != 0) && (hitung2 != 0) && (hitung3 != 0) && (hitung4 == 0) {
+	if (validasi1 != 0) && (validasi2 != 0) && (validasi3 != 0) && (validasi4 == 0) {
 		db.Create(&input)
 		c.JSON(http.StatusOK, gin.H{"Data yang telah di tambahkans": input})
 	}

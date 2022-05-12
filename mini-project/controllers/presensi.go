@@ -4,8 +4,6 @@ import (
 	"mini_project/models"
 	"net/http"
 
-	"fmt"
-
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 )
@@ -53,19 +51,17 @@ func Post_presensi(c *gin.Context) {
 		matakuliah = append(matakuliah, jadwal.Matakuliah)
 		tanggal = append(tanggal, jadwal.Tanggal_perkuliahan)
 	}
-	fmt.Println(matakuliah)
-	fmt.Println(tanggal)
-	fmt.Println(input)
 
 	//MEMASTIKAN MATAKULIAH DAN TANGGAL PENGAMPU YANG DI INPUT ADA DALAM TABEL PENJADWALAN
-	var hitung1 int
+	var validasi1 int
 	for i := 0; i < len(matakuliah); i++ {
 		if (Input.Matakuliah == matakuliah[i]) && (Input.Tanggal_perkuliahan+"T00:00:00+07:00" == tanggal[i]) {
-			hitung1++
+			validasi1++
 		}
 	}
-	if hitung1 == 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"Error": "Matakuliah dan tanggal yang Anda input tidak ditemukan"})
+	if validasi1 == 0 {
+		message := "MATAKULIAH: '" + Input.Matakuliah + "' ATAU TANGGAL: '" + Input.Tanggal_perkuliahan + "' YANG ANDA INPUTKAN TIDAK DI TEMUKAN"
+		c.JSON(http.StatusBadRequest, gin.H{"PRESENSI GAGAL": message})
 
 	}
 
@@ -80,14 +76,15 @@ func Post_presensi(c *gin.Context) {
 	}
 
 	//MEMASTIKAN NAMA MAHASISWA ADA
-	var hitung2 int
+	var validasi2 int
 	for i := 0; i < len(Nama_mahasiswa); i++ {
 		if Input.Nama_mahasiswa == Nama_mahasiswa[i] {
-			hitung2++
+			validasi2++
 		}
 	}
-	if hitung2 == 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"Error": "Nama mahasiswa yang Anda input tidak ditemukan"})
+	if validasi2 == 0 {
+		message := "NAMA MAHASISWA: '" + Input.Nama_mahasiswa + "' YANG ANDA INPUTKAN TIDAK DITEMUKAN"
+		c.JSON(http.StatusBadRequest, gin.H{"PRESENSI GAGAL": message})
 
 	}
 
@@ -106,21 +103,37 @@ func Post_presensi(c *gin.Context) {
 	}
 
 	//MEMASTIKAN TANGGAL DAN JAM BELUM DIGUNAKAN
-	var hitung3 int
+	var validasi3 int
 	if matkul != nil {
 		for i := len(matkul) - 1; i >= 0; i-- {
 			if (Input.Matakuliah == matkul[i]) && (Input.Nama_mahasiswa == mahasiswa[i]) && (Input.Tanggal_perkuliahan+"T00:00:00+07:00" == tanggal2[i]) {
-				hitung3++
+				validasi3++
 			}
 		}
-		if hitung3 != 0 {
-			c.JSON(http.StatusBadRequest, gin.H{"Error": "Anda sudah melakukan presensi untuk pertemuan ini"})
+		if validasi3 != 0 {
+			c.JSON(http.StatusBadRequest, gin.H{"ERROR": "ANDA SUDAH MELAKUKAN PRESENSI UNTUK PERTEMUAN INI"})
 		}
 	}
 
-	//JIKA SYARAT TERPENUHI MAKA DATA AKAN DI INPUTKAN
-	if (hitung1 != 0) && (hitung2 != 0) && (hitung3 == 0) {
+	//MEMASTIKAN INPUT KEHADIRAN = 1
+	if Input.Kehadiran != 1 {
+		c.JSON(http.StatusBadRequest, gin.H{"PRESENSI GAGAL": "SILAKAN INPUT KEHADIRAN DENGAN ANGKA '1'"})
+	}
+
+	//JIKA SEMUA VALIDASI LOLOS MAKA DATA AKAN DI INPUTKAN
+	if (validasi1 != 0) && (validasi2 != 0) && (validasi3 == 0) && (Input.Kehadiran == 1) {
 		db.Create(&input)
-		c.JSON(http.StatusOK, gin.H{"Data yang telah di tambahkan": input})
+		type Tampilkan struct {
+			Matakuliah string
+			Nama       string
+			Tanggal    string
+			Kehadiran  string
+		}
+		var t Tampilkan
+		t.Matakuliah = Input.Matakuliah
+		t.Nama = Input.Nama_mahasiswa
+		t.Tanggal = Input.Tanggal_perkuliahan
+		t.Kehadiran = "HADIR"
+		c.JSON(http.StatusOK, gin.H{"PRESENSI BERHASIL DILAKUKAN": t})
 	}
 }
