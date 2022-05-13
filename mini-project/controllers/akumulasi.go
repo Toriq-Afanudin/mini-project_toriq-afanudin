@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"mini_project/models"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
@@ -45,5 +44,8 @@ func Get_akumulasi(c *gin.Context) {
 		}
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": record})
+	c.JSON(200, gin.H{
+		"data":   record,
+		"status": "berhasil mengambil data akumulasi",
+	})
 }
