@@ -95,8 +95,20 @@ func Post_penjadwalan(c *gin.Context) {
 		})
 	}
 
+	//VALIDASI MATAKULIAH BELUM DIJADWALNKAN DALAM TANGGAL TERTENTU
+	var m models.Penjadwalan
+	db.Where("tanggal_perkuliahan = ?", Input.Tanggal_perkuliahan).Where("matakuliah = ?", Input.Matakuliah).Find(&m)
+	var v5 int
+	if (m.Tanggal_perkuliahan == Input.Tanggal_perkuliahan+"T00:00:00+07:00") && (m.Matakuliah == Input.Matakuliah) {
+		v5 = 1
+		c.JSON(400, gin.H{
+			"status":  "error",
+			"message": "MATAKULIAH SUDAH DIJADWALKAN PADA TANGGAL TERSEBUT",
+		})
+	}
+
 	//JIKA SUDAH LOLOS VALIDASI MAKA DATA AKAN DI INPUTKAN
-	if (v1 != 1) && (v2 != 1) && (v3 != 1) && (v4 != 1) {
+	if (v1 != 1) && (v2 != 1) && (v3 != 1) && (v4 != 1) && (v5 != 1) {
 		db.Create(&input)
 		type berhasil struct {
 			Matakuliah string
