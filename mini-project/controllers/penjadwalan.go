@@ -54,8 +54,8 @@ func Post_penjadwalan(c *gin.Context) {
 		v1 = 1
 		c.JSON(400, gin.H{
 			"status":  "error",
-			"message": "KELAS TIDAK DITEMUKAN",
-			"saran":   "CEK KEMBALI MATAKULIAH ATAU NAMA DOSEN",
+			"message": "kelas tidak ditemukan",
+			"saran":   "cek kembali matakuliah atau nama dosen",
 		})
 		return
 	}
@@ -68,7 +68,7 @@ func Post_penjadwalan(c *gin.Context) {
 		v2 = 1
 		c.JSON(400, gin.H{
 			"status":  "error",
-			"message": "JAM PERKULIAHAN TIDAK DITEMUKAN",
+			"message": "jam perkuliahan tidak ditemukan",
 		})
 		return
 	}
@@ -81,7 +81,7 @@ func Post_penjadwalan(c *gin.Context) {
 		v3 = 1
 		c.JSON(400, gin.H{
 			"status":  "error",
-			"message": "TANGGAL DAN JAM PERKULIAHAN SUDAH DIGUNAKAN",
+			"message": "tanggal dan jam perkuliahan sudah digunakan",
 		})
 		return
 	}
@@ -94,7 +94,7 @@ func Post_penjadwalan(c *gin.Context) {
 		v4 = 1
 		c.JSON(400, gin.H{
 			"status":  "error",
-			"message": "JUMLAH PERTEMUAN SUDAH PENUH",
+			"message": "jumlah pertemuan sudah 7 kali",
 		})
 		return
 	}
@@ -107,7 +107,7 @@ func Post_penjadwalan(c *gin.Context) {
 		v5 = 1
 		c.JSON(400, gin.H{
 			"status":  "error",
-			"message": "MATAKULIAH SUDAH DIJADWALKAN PADA TANGGAL TERSEBUT",
+			"message": "matakuliah sudah dijadwalkan pada tanggal tersebut",
 		})
 		return
 	}
