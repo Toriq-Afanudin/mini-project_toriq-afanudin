@@ -99,7 +99,7 @@ func Post_penjadwalan(c *gin.Context) {
 		return
 	}
 
-	//VALIDASI MATAKULIAH BELUM DIJADWALNKAN DALAM TANGGAL TERTENTU
+	//VALIDASI: MEMASTIKAN MATAKULIAH BELUM DIJADWALNKAN DALAM TANGGAL TERTENTU
 	var m models.Penjadwalan
 	db.Where("tanggal_perkuliahan = ?", Input.Tanggal_perkuliahan).Where("matakuliah = ?", Input.Matakuliah).Find(&m)
 	var v5 int

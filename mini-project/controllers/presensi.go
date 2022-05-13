@@ -51,7 +51,7 @@ func Post_presensi(c *gin.Context) {
 		v1 = 1
 		c.JSON(400, gin.H{
 			"status":  "error",
-			"message": "MATAKULIAH DAN TANGGAL TIDAK DITEMUKAN",
+			"message": "matakuliah `" + Input.Matakuliah + "` belum dijadwalkan pada tanggal `" + input.Tanggal_perkuliahan + "`",
 		})
 		return
 	}
@@ -64,7 +64,7 @@ func Post_presensi(c *gin.Context) {
 		v2 = 1
 		c.JSON(400, gin.H{
 			"status":  "error",
-			"message": "NAMA MAHASISWA TIDAK DITEMUKAN",
+			"message": "nama mahasiswa `" + Input.Nama_mahasiswa + "` tidak ditemukan",
 		})
 		return
 	}
@@ -77,7 +77,7 @@ func Post_presensi(c *gin.Context) {
 		v3 = 1
 		c.JSON(400, gin.H{
 			"status":  "error",
-			"message": "ANDA SUDAH MELAKUKAN PRESENSI",
+			"message": "anda sudah melakukan presensi",
 		})
 		return
 	}
@@ -88,7 +88,7 @@ func Post_presensi(c *gin.Context) {
 		v4 = 1
 		c.JSON(400, gin.H{
 			"status":  "error",
-			"message": "INPUT KEHADIRAN DENGAN ANGKA 1",
+			"message": "silakan input kehadiran dengan angka `1`",
 		})
 		return
 	}
@@ -106,7 +106,7 @@ func Post_presensi(c *gin.Context) {
 		t.Matakuliah = Input.Matakuliah
 		t.Nama = Input.Nama_mahasiswa
 		t.Tanggal = Input.Tanggal_perkuliahan
-		t.Kehadiran = "HADIR"
+		t.Kehadiran = "Hadir"
 		c.JSON(200, gin.H{
 			"status": "data berhasil di tambahkan",
 			"data":   t,
