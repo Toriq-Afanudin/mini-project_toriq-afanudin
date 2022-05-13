@@ -7,12 +7,6 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-type Input_akumulasi struct {
-	Nama_mahasiswa   string `json:"nama_mahasiswa"`
-	Jumlah_pertemuan int    `json:"jumlah_pertemuan"`
-	Jumlah_hadir     int    `json:"jumlah_hadir"`
-}
-
 func Get_akumulasi(c *gin.Context) {
 	//KONEKSI KE DATABASE
 	db := c.MustGet("db").(*gorm.DB)
