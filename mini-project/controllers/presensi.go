@@ -28,7 +28,10 @@ func Post_presensi(c *gin.Context) {
 	//MEMASTIKAN INPUTAN DALAM BENTUK JSON
 	var Input Input_presensi
 	if err := c.ShouldBindJSON(&Input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(400, gin.H{
+			"status":  "error",
+			"message": "data tidak dalam bentuk json",
+		})
 		return
 	}
 
@@ -50,6 +53,7 @@ func Post_presensi(c *gin.Context) {
 			"status":  "error",
 			"message": "MATAKULIAH DAN TANGGAL TIDAK DITEMUKAN",
 		})
+		return
 	}
 
 	//VALIDASI: MEMASTIKAN NAMA MAHASISWA ADA DI DATABASE
@@ -62,6 +66,7 @@ func Post_presensi(c *gin.Context) {
 			"status":  "error",
 			"message": "NAMA MAHASISWA TIDAK DITEMUKAN",
 		})
+		return
 	}
 
 	//VALIDASI: MEMASTIKAN MAHASISWA BELUM MELAKUKAN PRESENSI
@@ -74,6 +79,7 @@ func Post_presensi(c *gin.Context) {
 			"status":  "error",
 			"message": "ANDA SUDAH MELAKUKAN PRESENSI",
 		})
+		return
 	}
 
 	//VALIDASI: MEMASTIKAN INPUT KEHADIRAN = 1
@@ -84,6 +90,7 @@ func Post_presensi(c *gin.Context) {
 			"status":  "error",
 			"message": "INPUT KEHADIRAN DENGAN ANGKA 1",
 		})
+		return
 	}
 
 	//JIKA SEMUA VALIDASI LOLOS MAKA DATA AKAN DI INPUTKAN
@@ -104,5 +111,6 @@ func Post_presensi(c *gin.Context) {
 			"status": "data berhasil di tambahkan",
 			"data":   t,
 		})
+		return
 	}
 }

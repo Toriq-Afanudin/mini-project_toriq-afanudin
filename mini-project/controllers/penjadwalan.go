@@ -57,6 +57,7 @@ func Post_penjadwalan(c *gin.Context) {
 			"message": "KELAS TIDAK DITEMUKAN",
 			"saran":   "CEK KEMBALI MATAKULIAH ATAU NAMA DOSEN",
 		})
+		return
 	}
 
 	//VALIDASI JAM
@@ -69,6 +70,7 @@ func Post_penjadwalan(c *gin.Context) {
 			"status":  "error",
 			"message": "JAM PERKULIAHAN TIDAK DITEMUKAN",
 		})
+		return
 	}
 
 	//VALIDASI TANGGAL DAN JAM
@@ -81,6 +83,7 @@ func Post_penjadwalan(c *gin.Context) {
 			"status":  "error",
 			"message": "TANGGAL DAN JAM PERKULIAHAN SUDAH DIGUNAKAN",
 		})
+		return
 	}
 
 	//MENGHITUNG JUMLAH PERTEMUAN
@@ -93,6 +96,7 @@ func Post_penjadwalan(c *gin.Context) {
 			"status":  "error",
 			"message": "JUMLAH PERTEMUAN SUDAH PENUH",
 		})
+		return
 	}
 
 	//VALIDASI MATAKULIAH BELUM DIJADWALNKAN DALAM TANGGAL TERTENTU
@@ -105,6 +109,7 @@ func Post_penjadwalan(c *gin.Context) {
 			"status":  "error",
 			"message": "MATAKULIAH SUDAH DIJADWALKAN PADA TANGGAL TERSEBUT",
 		})
+		return
 	}
 
 	//JIKA SUDAH LOLOS VALIDASI MAKA DATA AKAN DI INPUTKAN
@@ -125,5 +130,6 @@ func Post_penjadwalan(c *gin.Context) {
 			"status": "data berhasil di tambahkan",
 			"data":   a,
 		})
+		return
 	}
 }
