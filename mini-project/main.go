@@ -43,5 +43,7 @@ func main() {
 
 	r.GET("/akumulasi", controllers.Get_akumulasi)
 
+	r.GET("/jam", controllers.Jam_perkuliahan)
+
 	r.Run()
 }

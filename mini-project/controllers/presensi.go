@@ -46,25 +46,33 @@ func Post_presensi(c *gin.Context) {
 	var jadwal models.Penjadwalan
 	var matakuliah []string
 	var tanggal []string
+	var akses []int
 	for i := 0; i < len(Penjadwalan); i++ {
 		jadwal = Penjadwalan[i]
 		matakuliah = append(matakuliah, jadwal.Matakuliah)
 		tanggal = append(tanggal, jadwal.Tanggal_perkuliahan)
+		akses = append(akses, jadwal.Akses)
 	}
 
 	//MEMASTIKAN MATAKULIAH DAN TANGGAL PENGAMPU YANG DI INPUT ADA DALAM TABEL PENJADWALAN
 	var validasi1 int
+	var validasi int
 	for i := 0; i < len(matakuliah); i++ {
 		if (Input.Matakuliah == matakuliah[i]) && (Input.Tanggal_perkuliahan+"T00:00:00+07:00" == tanggal[i]) {
 			validasi1++
+		}
+		if akses[i] == 1 {
+			validasi++
 		}
 	}
 	if validasi1 == 0 {
 		message := "MATAKULIAH: '" + Input.Matakuliah + "' ATAU TANGGAL: '" + Input.Tanggal_perkuliahan + "' YANG ANDA INPUTKAN TIDAK DI TEMUKAN"
 		c.JSON(http.StatusBadRequest, gin.H{"PRESENSI GAGAL": message})
-
 	}
-
+	if validasi != 1 {
+		message := "PRESENSI TIDAK DI IZINKAN ATAU SEDANG DI TUTUP OLEH DOSEN PENGAMPU"
+		c.JSON(http.StatusBadRequest, gin.H{"PRESENSI GAGAL": message})
+	}
 	//MENGAMBIL DATA NAMA MAHASISWA
 	var Nama []models.Daftar_mahasiswa
 	db.Find(&Nama)
@@ -116,12 +124,14 @@ func Post_presensi(c *gin.Context) {
 	}
 
 	//MEMASTIKAN INPUT KEHADIRAN = 1
+	var validasi4 int
 	if Input.Kehadiran != 1 {
+		validasi4 = 1
 		c.JSON(http.StatusBadRequest, gin.H{"PRESENSI GAGAL": "SILAKAN INPUT KEHADIRAN DENGAN ANGKA '1'"})
 	}
 
 	//JIKA SEMUA VALIDASI LOLOS MAKA DATA AKAN DI INPUTKAN
-	if (validasi1 != 0) && (validasi2 != 0) && (validasi3 == 0) && (Input.Kehadiran == 1) {
+	if (validasi == 1) && (validasi1 != 0) && (validasi2 != 0) && (validasi3 == 0) && (validasi4 != 1) {
 		db.Create(&input)
 		type Tampilkan struct {
 			Matakuliah string

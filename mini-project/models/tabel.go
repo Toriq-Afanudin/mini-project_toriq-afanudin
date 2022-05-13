@@ -6,6 +6,7 @@ type Penjadwalan struct {
 	Dosen_pengampu_tanpa_gelar string `json:"dosen_pengampu_tanpa_gelar"`
 	Tanggal_perkuliahan        string `json:"tanggal_perkuliahan"`
 	Jam_perkuliahan            string `json:"jam_perkuliahan"`
+	Akses                      int    `json:"akses"`
 }
 
 type Kehadiran struct {
