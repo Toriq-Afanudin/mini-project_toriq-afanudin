@@ -113,13 +113,13 @@ func Post_penjadwalan(c *gin.Context) {
 		return
 	}
 
-	//VALIDASI PENULISAN TANGGAL 2
+	//VALIDASI PENULISAN TANGGAL 1
 	var d models.Libur
 	db.Where("tanggal = ?", Input.Tanggal_perkuliahan).Find(&d)
-	var v7 int
+	var v6 int
 	fmt.Println(c)
 	if d.Tanggal == Input.Tanggal_perkuliahan {
-		v7 = 1
+		v6 = 1
 		c.JSON(400, gin.H{
 			"status":  "error",
 			"message": "tidak bisa melakukan perkuliahan karena hari libur " + d.Keterangan,
@@ -127,13 +127,13 @@ func Post_penjadwalan(c *gin.Context) {
 		return
 	}
 
-	//VALIDASI PENULISAN TANGGAL 1
+	//VALIDASI PENULISAN TANGGAL 2
 	var b models.Tanggal
 	db.Where("tanggal = ?", Input.Tanggal_perkuliahan).Find(&b)
-	var v6 int
+	var v7 int
 	fmt.Println(b)
 	if b.Tanggal != Input.Tanggal_perkuliahan {
-		v6 = 1
+		v7 = 1
 		c.JSON(400, gin.H{
 			"status":  "error",
 			"message": "tanggal diluar masa perkuliahan",
