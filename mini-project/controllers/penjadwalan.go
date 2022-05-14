@@ -50,9 +50,9 @@ func Post_penjadwalan(c *gin.Context) {
 	//VALIDASI KELAS (MATAKULIAH DAN DOSEN)
 	var k models.Kelas
 	db.Where("matakuliah = ?", Input.Matakuliah).Where("dosen_pengampu_tanpa_gelar = ?", Input.Dosen_pengampu_tanpa_gelar).Find(&k)
-	var v1 int //validasi
+	var v1 bool //validasi
 	if (k.Matakuliah != Input.Matakuliah) && (k.Dosen_pengampu_tanpa_gelar != Input.Dosen_pengampu_tanpa_gelar) {
-		v1 = 1
+		v1 = true
 		c.JSON(400, gin.H{
 			"status":  "error",
 			"message": "kelas tidak ditemukan",
@@ -64,9 +64,9 @@ func Post_penjadwalan(c *gin.Context) {
 	//VALIDASI JAM
 	var j models.Jam_perkuliahan
 	db.Where("jam_perkuliahan = ?", Input.Jam_perkuliahan).Find(&j)
-	var v2 int
+	var v2 bool
 	if j.Jam_perkuliahan != Input.Jam_perkuliahan {
-		v2 = 1
+		v2 = true
 		c.JSON(400, gin.H{
 			"status":  "error",
 			"message": "jam perkuliahan tidak ditemukan",
@@ -77,9 +77,9 @@ func Post_penjadwalan(c *gin.Context) {
 	//VALIDASI TANGGAL DAN JAM
 	var a models.Penjadwalan
 	db.Where("tanggal_perkuliahan = ?", Input.Tanggal_perkuliahan).Where("jam_perkuliahan = ?", Input.Jam_perkuliahan).Find(&a)
-	var v3 int
+	var v3 bool
 	if (a.Tanggal_perkuliahan == Input.Tanggal_perkuliahan+"T00:00:00+07:00") && (a.Jam_perkuliahan == Input.Jam_perkuliahan) {
-		v3 = 1
+		v3 = true
 		c.JSON(400, gin.H{
 			"status":  "error",
 			"message": "tanggal dan jam perkuliahan sudah digunakan",
@@ -90,9 +90,9 @@ func Post_penjadwalan(c *gin.Context) {
 	//MENGHITUNG JUMLAH PERTEMUAN
 	var p []models.Penjadwalan
 	db.Where("matakuliah = ?", Input.Matakuliah).Find(&p)
-	var v4 int
+	var v4 bool
 	if len(p) >= 7 {
-		v4 = 1
+		v4 = true
 		c.JSON(400, gin.H{
 			"status":  "error",
 			"message": "jumlah pertemuan sudah 7 kali",
@@ -103,9 +103,9 @@ func Post_penjadwalan(c *gin.Context) {
 	//VALIDASI: MEMASTIKAN MATAKULIAH BELUM DIJADWALNKAN DALAM TANGGAL TERTENTU
 	var m models.Penjadwalan
 	db.Where("tanggal_perkuliahan = ?", Input.Tanggal_perkuliahan).Where("matakuliah = ?", Input.Matakuliah).Find(&m)
-	var v5 int
+	var v5 bool
 	if (m.Tanggal_perkuliahan == Input.Tanggal_perkuliahan+"T00:00:00+07:00") && (m.Matakuliah == Input.Matakuliah) {
-		v5 = 1
+		v5 = true
 		c.JSON(400, gin.H{
 			"status":  "error",
 			"message": "matakuliah sudah dijadwalkan pada tanggal tersebut",
@@ -116,10 +116,10 @@ func Post_penjadwalan(c *gin.Context) {
 	//VALIDASI PENULISAN TANGGAL 1
 	var d models.Libur
 	db.Where("tanggal = ?", Input.Tanggal_perkuliahan).Find(&d)
-	var v6 int
+	var v6 bool
 	fmt.Println(c)
 	if d.Tanggal == Input.Tanggal_perkuliahan {
-		v6 = 1
+		v6 = true
 		c.JSON(400, gin.H{
 			"status":  "error",
 			"message": "tidak bisa melakukan perkuliahan karena hari libur " + d.Keterangan,
@@ -130,10 +130,10 @@ func Post_penjadwalan(c *gin.Context) {
 	//VALIDASI PENULISAN TANGGAL 2
 	var b models.Tanggal
 	db.Where("tanggal = ?", Input.Tanggal_perkuliahan).Find(&b)
-	var v7 int
+	var v7 bool
 	fmt.Println(b)
 	if b.Tanggal != Input.Tanggal_perkuliahan {
-		v7 = 1
+		v7 = true
 		c.JSON(400, gin.H{
 			"status":  "error",
 			"message": "tanggal diluar masa perkuliahan",
@@ -142,9 +142,9 @@ func Post_penjadwalan(c *gin.Context) {
 	}
 
 	//JIKA SUDAH LOLOS VALIDASI MAKA DATA AKAN DI INPUTKAN
-	var trigger int
-	if (v1 != 1) && (v2 != 1) && (v3 != 1) && (v4 != 1) && (v5 != 1) && (v6 != 1) && (v7 != 1) {
-		trigger = 1
+	var trigger bool
+	if !v1 && !v2 && !v3 && !v4 && !v5 && !v6 && !v7 {
+		trigger = true
 		db.Create(&input)
 		type berhasil struct {
 			Matakuliah string
@@ -164,7 +164,7 @@ func Post_penjadwalan(c *gin.Context) {
 	}
 
 	//TRIGGER JUMLAH PERTEMUAN
-	if trigger == 1 {
+	if trigger {
 		var a models.Akumulasi
 		var Akumulasi []models.Akumulasi
 		db.Where("matakuliah = ?", Input.Matakuliah).Find(&a)

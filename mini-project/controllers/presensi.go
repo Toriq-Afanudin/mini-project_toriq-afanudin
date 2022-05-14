@@ -44,9 +44,9 @@ func Post_presensi(c *gin.Context) {
 	//VALIDASI: MEMASTIKAN DATA 'MATAKULIAH' DAN 'TANGGAL PERKULIAHAN' ADA DI DATABASE
 	var m models.Penjadwalan
 	db.Where("matakuliah = ?", Input.Matakuliah).Where("tanggal_perkuliahan = ?", Input.Tanggal_perkuliahan).Find(&m)
-	var v1 int
+	var v1 bool
 	if (Input.Matakuliah != m.Matakuliah) && (Input.Tanggal_perkuliahan+"T00:00:00+07:00" != m.Tanggal_perkuliahan) {
-		v1 = 1
+		v1 = true
 		c.JSON(400, gin.H{
 			"status":  "error",
 			"message": "matakuliah `" + Input.Matakuliah + "` belum dijadwalkan pada tanggal `" + input.Tanggal_perkuliahan + "`",
@@ -57,9 +57,9 @@ func Post_presensi(c *gin.Context) {
 	//VALIDASI: MEMASTIKAN NAMA MAHASISWA ADA DI DATABASE
 	var n models.Daftar_mahasiswa
 	db.Where("nama = ?", Input.Nama_mahasiswa).Find(&n)
-	var v2 int
+	var v2 bool
 	if Input.Nama_mahasiswa != n.Nama {
-		v2 = 1
+		v2 = true
 		c.JSON(400, gin.H{
 			"status":  "error",
 			"message": "nama mahasiswa `" + Input.Nama_mahasiswa + "` tidak ditemukan",
@@ -70,9 +70,9 @@ func Post_presensi(c *gin.Context) {
 	//VALIDASI: MEMASTIKAN MAHASISWA BELUM MELAKUKAN PRESENSI
 	var s models.Kehadiran
 	db.Where("matakuliah = ?", Input.Matakuliah).Where("nama_mahasiswa = ?", Input.Nama_mahasiswa).Where("tanggal_perkuliahan = ?", Input.Tanggal_perkuliahan).Find(&s)
-	var v3 int
+	var v3 bool
 	if (s.Matakuliah == Input.Matakuliah) && (s.Nama_mahasiswa == Input.Nama_mahasiswa) && (s.Tanggal_perkuliahan == Input.Tanggal_perkuliahan+"T00:00:00+07:00") {
-		v3 = 1
+		v3 = true
 		c.JSON(400, gin.H{
 			"status":  "error",
 			"message": "anda sudah melakukan presensi",
@@ -82,10 +82,10 @@ func Post_presensi(c *gin.Context) {
 
 	//MEMASTIKAN PRESENSI DI IZINKAN OLEH DOSEN
 	var e models.Penjadwalan
-	var v4 int
+	var v4 bool
 	db.Where("matakuliah = ?", Input.Matakuliah).Where("tanggal_perkuliahan = ?", Input.Tanggal_perkuliahan).Find(&e)
 	if e.Akses != 1 {
-		v4 = 1
+		v4 = true
 		c.JSON(400, gin.H{
 			"status":  "error",
 			"message": "presensi tidak di izinkan oleh dosen pengampu",
@@ -94,9 +94,9 @@ func Post_presensi(c *gin.Context) {
 	}
 
 	//JIKA SEMUA VALIDASI LOLOS MAKA DATA AKAN DI INPUTKAN
-	var trigger int
-	if (v1 != 1) && (v2 != 1) && (v3 != 1) && (v4 != 1) {
-		trigger = 1
+	var trigger bool
+	if !v1 && !v2 && !v3 && !v4 {
+		trigger = true
 		db.Create(&input)
 		type Tampilkan struct {
 			Matakuliah string
@@ -116,7 +116,7 @@ func Post_presensi(c *gin.Context) {
 	}
 
 	//TRIGER JUMLAH HADIR
-	if trigger == 1 {
+	if trigger {
 		var a models.Akumulasi
 		var Akumulasi []models.Akumulasi
 		db.Where("matakuliah = ?", Input.Matakuliah).Where("nama = ?", Input.Nama_mahasiswa).Find(&a)
