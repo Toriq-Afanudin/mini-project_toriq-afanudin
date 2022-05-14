@@ -34,7 +34,7 @@ func main() {
 	r.GET("/presensi", controllers.Get_presensi)
 	r.POST("/presensi", controllers.Post_presensi)
 
-	//REST API UNTUK PROGRAMMER
+	//REST API UNTUK PROGRAMMER/ MELIHAT TABEL REFERENSI
 	r.GET("/dosen", controllers.Dosen)
 	r.GET("/kelas", controllers.Kelas)
 	r.GET("/mahasiswa", controllers.Mahasiswa)
