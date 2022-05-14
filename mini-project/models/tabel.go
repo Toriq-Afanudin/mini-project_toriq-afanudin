@@ -14,7 +14,6 @@ type Kehadiran struct {
 	Matakuliah          string `json:"matakuliah"`
 	Nama_mahasiswa      string `json:"nama_mahasiswa"`
 	Tanggal_perkuliahan string `json:"tanggal_perkuliahan"`
-	Kehadiran           int    `json:"kehadiran"`
 }
 
 type Dosen_pengampu struct {

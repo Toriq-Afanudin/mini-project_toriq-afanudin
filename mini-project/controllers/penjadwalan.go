@@ -142,5 +142,6 @@ func Post_penjadwalan(c *gin.Context) {
 		db.Where("matakuliah = ?", Input.Matakuliah).Find(&a)
 		a.Pertemuan++
 		db.Model(&Akumulasi).Where("matakuliah = ?", Input.Matakuliah).Update("pertemuan", a.Pertemuan)
+		return
 	}
 }

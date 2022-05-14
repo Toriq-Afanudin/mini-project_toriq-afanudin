@@ -12,7 +12,6 @@ type Input_presensi struct {
 	Matakuliah          string `json:"matakuliah"`
 	Nama_mahasiswa      string `json:"nama_mahasiswa"`
 	Tanggal_perkuliahan string `json:"tanggal_perkuliahan"`
-	Kehadiran           int    `json:"kehadiran"`
 }
 
 func Get_presensi(c *gin.Context) {
@@ -40,7 +39,6 @@ func Post_presensi(c *gin.Context) {
 		Matakuliah:          Input.Matakuliah,
 		Nama_mahasiswa:      Input.Nama_mahasiswa,
 		Tanggal_perkuliahan: Input.Tanggal_perkuliahan,
-		Kehadiran:           Input.Kehadiran,
 	}
 
 	//VALIDASI: MEMASTIKAN DATA 'MATAKULIAH' DAN 'TANGGAL PERKULIAHAN' ADA DI DATABASE
@@ -82,21 +80,10 @@ func Post_presensi(c *gin.Context) {
 		return
 	}
 
-	//VALIDASI: MEMASTIKAN INPUT KEHADIRAN = 1
-	var v4 int
-	if Input.Kehadiran != 1 {
-		v4 = 1
-		c.JSON(400, gin.H{
-			"status":  "error",
-			"message": "silakan input kehadiran dengan angka `1`",
-		})
-		return
-	}
-
 	//JIKA SEMUA VALIDASI LOLOS MAKA DATA AKAN DI INPUTKAN
-	var v5 int
-	if (v1 != 1) && (v2 != 1) && (v3 != 1) && (v4 != 1) {
-		v5 = 1
+	var v4 int
+	if (v1 != 1) && (v2 != 1) && (v3 != 1) {
+		v4 = 1
 		db.Create(&input)
 		type Tampilkan struct {
 			Matakuliah string
@@ -116,11 +103,12 @@ func Post_presensi(c *gin.Context) {
 	}
 
 	//TRIGER JUMLAH HADIR
-	if v5 == 1 {
+	if v4 == 1 {
 		var a models.Akumulasi
 		var Akumulasi []models.Akumulasi
 		db.Where("matakuliah = ?", Input.Matakuliah).Where("nama = ?", Input.Nama_mahasiswa).Find(&a)
 		a.Hadir++
-		db.Model(&Akumulasi).Where("matakuliah = ?", Input.Matakuliah).Where("nama = ?", Input.Nama_mahasiswa).Update("hadir", a.Hadir)
+		a.Tidak = a.Pertemuan - a.Hadir
+		db.Model(&Akumulasi).Where("matakuliah = ?", Input.Matakuliah).Where("nama = ?", Input.Nama_mahasiswa).Update("hadir", a.Hadir).Update("tidak", a.Tidak).Update("tidak", a.Tidak)
 	}
 }
