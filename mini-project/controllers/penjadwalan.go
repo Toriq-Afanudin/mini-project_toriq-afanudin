@@ -78,7 +78,7 @@ func Post_penjadwalan(c *gin.Context) {
 	var a models.Penjadwalan
 	db.Where("tanggal_perkuliahan = ?", Input.Tanggal_perkuliahan).Where("jam_perkuliahan = ?", Input.Jam_perkuliahan).Find(&a)
 	var v3 bool
-	if (a.Tanggal_perkuliahan == Input.Tanggal_perkuliahan+"T00:00:00+07:00") && (a.Jam_perkuliahan == Input.Jam_perkuliahan) {
+	if (a.Tanggal_perkuliahan == Input.Tanggal_perkuliahan) && (a.Jam_perkuliahan == Input.Jam_perkuliahan) {
 		v3 = true
 		c.JSON(400, gin.H{
 			"status":  "error",
@@ -104,7 +104,7 @@ func Post_penjadwalan(c *gin.Context) {
 	var m models.Penjadwalan
 	db.Where("tanggal_perkuliahan = ?", Input.Tanggal_perkuliahan).Where("matakuliah = ?", Input.Matakuliah).Find(&m)
 	var v5 bool
-	if (m.Tanggal_perkuliahan == Input.Tanggal_perkuliahan+"T00:00:00+07:00") && (m.Matakuliah == Input.Matakuliah) {
+	if (m.Tanggal_perkuliahan == Input.Tanggal_perkuliahan) && (m.Matakuliah == Input.Matakuliah) {
 		v5 = true
 		c.JSON(400, gin.H{
 			"status":  "error",
@@ -113,7 +113,7 @@ func Post_penjadwalan(c *gin.Context) {
 		return
 	}
 
-	//VALIDASI PENULISAN TANGGAL 1
+	//VALIDASI: MEMASTIKAN BUKAN HARI LIBUR/TANGGAL MERAH
 	var d models.Libur
 	db.Where("tanggal = ?", Input.Tanggal_perkuliahan).Find(&d)
 	var v6 bool
@@ -127,7 +127,7 @@ func Post_penjadwalan(c *gin.Context) {
 		return
 	}
 
-	//VALIDASI PENULISAN TANGGAL 2
+	//VALIDASI: MEMASTIKAN TANGGAL MERUPAKAN MASA PERKULIAHAN
 	var b models.Tanggal
 	db.Where("tanggal = ?", Input.Tanggal_perkuliahan).Find(&b)
 	var v7 bool
@@ -136,7 +136,7 @@ func Post_penjadwalan(c *gin.Context) {
 		v7 = true
 		c.JSON(400, gin.H{
 			"status":  "error",
-			"message": "tanggal diluar masa perkuliahan",
+			"message": "tanggal diluar masa perkuliahan atau format salah",
 		})
 		return
 	}
@@ -154,8 +154,8 @@ func Post_penjadwalan(c *gin.Context) {
 		}
 		var a berhasil
 		a.Matakuliah = Input.Matakuliah
-		a.Dosen = Input.Dosen_pengampu_tanpa_gelar
-		a.Tanggal = Input.Tanggal_perkuliahan[0:10]
+		a.Dosen = k.Dosen_pengampu
+		a.Tanggal = Input.Tanggal_perkuliahan
 		a.Waktu = Input.Jam_perkuliahan
 		c.JSON(200, gin.H{
 			"status": "data berhasil di tambahkan",

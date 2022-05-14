@@ -45,7 +45,7 @@ func Post_presensi(c *gin.Context) {
 	var m models.Penjadwalan
 	db.Where("matakuliah = ?", Input.Matakuliah).Where("tanggal_perkuliahan = ?", Input.Tanggal_perkuliahan).Find(&m)
 	var v1 bool
-	if (Input.Matakuliah != m.Matakuliah) && (Input.Tanggal_perkuliahan+"T00:00:00+07:00" != m.Tanggal_perkuliahan) {
+	if (Input.Matakuliah != m.Matakuliah) && (Input.Tanggal_perkuliahan != m.Tanggal_perkuliahan) {
 		v1 = true
 		c.JSON(400, gin.H{
 			"status":  "error",
@@ -71,7 +71,7 @@ func Post_presensi(c *gin.Context) {
 	var s models.Kehadiran
 	db.Where("matakuliah = ?", Input.Matakuliah).Where("nama_mahasiswa = ?", Input.Nama_mahasiswa).Where("tanggal_perkuliahan = ?", Input.Tanggal_perkuliahan).Find(&s)
 	var v3 bool
-	if (s.Matakuliah == Input.Matakuliah) && (s.Nama_mahasiswa == Input.Nama_mahasiswa) && (s.Tanggal_perkuliahan == Input.Tanggal_perkuliahan+"T00:00:00+07:00") {
+	if (s.Matakuliah == Input.Matakuliah) && (s.Nama_mahasiswa == Input.Nama_mahasiswa) && (s.Tanggal_perkuliahan == Input.Tanggal_perkuliahan) {
 		v3 = true
 		c.JSON(400, gin.H{
 			"status":  "error",
@@ -115,14 +115,14 @@ func Post_presensi(c *gin.Context) {
 		})
 	}
 
-	//TRIGER JUMLAH HADIR
+	//TRIGGER JUMLAH HADIR
 	if trigger {
 		var a models.Akumulasi
 		var Akumulasi []models.Akumulasi
 		db.Where("matakuliah = ?", Input.Matakuliah).Where("nama = ?", Input.Nama_mahasiswa).Find(&a)
 		a.Hadir++
 		a.Tidak = a.Pertemuan - a.Hadir
-		db.Model(&Akumulasi).Where("matakuliah = ?", Input.Matakuliah).Where("nama = ?", Input.Nama_mahasiswa).Update("hadir", a.Hadir).Update("tidak", a.Tidak).Update("tidak", a.Tidak)
+		db.Model(&Akumulasi).Where("matakuliah = ?", Input.Matakuliah).Where("nama = ?", Input.Nama_mahasiswa).Update("hadir", a.Hadir).Update("tidak", a.Tidak)
 		return
 	}
 }
