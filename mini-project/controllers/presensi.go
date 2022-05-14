@@ -94,7 +94,9 @@ func Post_presensi(c *gin.Context) {
 	}
 
 	//JIKA SEMUA VALIDASI LOLOS MAKA DATA AKAN DI INPUTKAN
+	var v5 int
 	if (v1 != 1) && (v2 != 1) && (v3 != 1) && (v4 != 1) {
+		v5 = 1
 		db.Create(&input)
 		type Tampilkan struct {
 			Matakuliah string
@@ -111,6 +113,14 @@ func Post_presensi(c *gin.Context) {
 			"status": "data berhasil di tambahkan",
 			"data":   t,
 		})
-		return
+	}
+
+	//TRIGER JUMLAH HADIR
+	if v5 == 1 {
+		var a models.Akumulasi
+		var Akumulasi []models.Akumulasi
+		db.Where("matakuliah = ?", Input.Matakuliah).Where("nama = ?", Input.Nama_mahasiswa).Find(&a)
+		a.Hadir++
+		db.Model(&Akumulasi).Where("matakuliah = ?", Input.Matakuliah).Where("nama = ?", Input.Nama_mahasiswa).Update("hadir", a.Hadir)
 	}
 }

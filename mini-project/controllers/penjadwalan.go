@@ -49,7 +49,7 @@ func Post_penjadwalan(c *gin.Context) {
 	//VALIDASI KELAS (MATAKULIAH DAN DOSEN)
 	var k models.Kelas
 	db.Where("matakuliah = ?", Input.Matakuliah).Where("dosen_pengampu_tanpa_gelar = ?", Input.Dosen_pengampu_tanpa_gelar).Find(&k)
-	var v1 int
+	var v1 int //validasi
 	if (k.Matakuliah != Input.Matakuliah) && (k.Dosen_pengampu_tanpa_gelar != Input.Dosen_pengampu_tanpa_gelar) {
 		v1 = 1
 		c.JSON(400, gin.H{
@@ -113,7 +113,10 @@ func Post_penjadwalan(c *gin.Context) {
 	}
 
 	//JIKA SUDAH LOLOS VALIDASI MAKA DATA AKAN DI INPUTKAN
+	// var v6 int
+	var v6 int
 	if (v1 != 1) && (v2 != 1) && (v3 != 1) && (v4 != 1) && (v5 != 1) {
+		v6 = 1
 		db.Create(&input)
 		type berhasil struct {
 			Matakuliah string
@@ -130,6 +133,14 @@ func Post_penjadwalan(c *gin.Context) {
 			"status": "data berhasil di tambahkan",
 			"data":   a,
 		})
-		return
+	}
+
+	//TRIGGER JUMLAH PERTEMUAN
+	if v6 == 1 {
+		var a models.Akumulasi
+		var Akumulasi []models.Akumulasi
+		db.Where("matakuliah = ?", Input.Matakuliah).Find(&a)
+		a.Pertemuan++
+		db.Model(&Akumulasi).Where("matakuliah = ?", Input.Matakuliah).Update("pertemuan", a.Pertemuan)
 	}
 }

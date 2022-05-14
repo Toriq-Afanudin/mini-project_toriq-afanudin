@@ -42,3 +42,12 @@ type Jam_perkuliahan struct {
 	Id_jam          int    `json:"Id_jam"`
 	Jam_perkuliahan string `json:"jam_perkuliahan"`
 }
+
+type Akumulasi struct {
+	Id_akumulasi int    `json:"id_akumulasi"`
+	Matakuliah   string `json:"matakuliah"`
+	Nama         string `json:"nama"`
+	Pertemuan    int    `json:"pertemuan"`
+	Hadir        int    `json:"hadir"`
+	Tidak        int    `json:"tidak"`
+}
