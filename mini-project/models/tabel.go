@@ -50,3 +50,12 @@ type Akumulasi struct {
 	Hadir        int    `json:"hadir"`
 	Tidak        int    `json:"tidak"`
 }
+
+type Tanggal struct {
+	Tanggal string `json:"tanggal"`
+}
+
+type Libur struct {
+	Tanggal    string `json:"tanggal"`
+	Keterangan string `json:"keterangan"`
+}

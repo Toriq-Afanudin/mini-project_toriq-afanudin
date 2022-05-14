@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"mini_project/models"
 
 	"github.com/gin-gonic/gin"
@@ -112,11 +113,38 @@ func Post_penjadwalan(c *gin.Context) {
 		return
 	}
 
-	//JIKA SUDAH LOLOS VALIDASI MAKA DATA AKAN DI INPUTKAN
-	// var v6 int
+	//VALIDASI PENULISAN TANGGAL 2
+	var d models.Libur
+	db.Where("tanggal = ?", Input.Tanggal_perkuliahan).Find(&d)
+	var v7 int
+	fmt.Println(c)
+	if d.Tanggal == Input.Tanggal_perkuliahan {
+		v7 = 1
+		c.JSON(400, gin.H{
+			"status":  "error",
+			"message": "tidak bisa melakukan perkuliahan karena hari libur " + d.Keterangan,
+		})
+		return
+	}
+
+	//VALIDASI PENULISAN TANGGAL 1
+	var b models.Tanggal
+	db.Where("tanggal = ?", Input.Tanggal_perkuliahan).Find(&b)
 	var v6 int
-	if (v1 != 1) && (v2 != 1) && (v3 != 1) && (v4 != 1) && (v5 != 1) {
+	fmt.Println(b)
+	if b.Tanggal != Input.Tanggal_perkuliahan {
 		v6 = 1
+		c.JSON(400, gin.H{
+			"status":  "error",
+			"message": "tanggal diluar masa perkuliahan",
+		})
+		return
+	}
+
+	//JIKA SUDAH LOLOS VALIDASI MAKA DATA AKAN DI INPUTKAN
+	var trigger int
+	if (v1 != 1) && (v2 != 1) && (v3 != 1) && (v4 != 1) && (v5 != 1) && (v6 != 1) && (v7 != 1) {
+		trigger = 1
 		db.Create(&input)
 		type berhasil struct {
 			Matakuliah string
@@ -136,7 +164,7 @@ func Post_penjadwalan(c *gin.Context) {
 	}
 
 	//TRIGGER JUMLAH PERTEMUAN
-	if v6 == 1 {
+	if trigger == 1 {
 		var a models.Akumulasi
 		var Akumulasi []models.Akumulasi
 		db.Where("matakuliah = ?", Input.Matakuliah).Find(&a)

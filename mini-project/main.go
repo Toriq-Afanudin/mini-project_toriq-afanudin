@@ -25,24 +25,20 @@ func main() {
 		c.JSON(http.StatusOK, gin.H{"data": "Sistem Presensi Mahasiswa"})
 	})
 
-	r.GET("/dosen", controllers.Dosen)
-
-	r.GET("/kelas", controllers.Kelas)
-
-	r.GET("/mahasiswa", controllers.Mahasiswa)
-
+	//REST API UNTUK DOSEN
 	r.GET("/penjadwalan", controllers.Get_penjadwalan)
 	r.POST("/penjadwalan", controllers.Post_penjadwalan)
-	// r.PUT("/penjadwalan/:id_penjadwalan", controllers.Penjadwalan_ubah)
-	// r.DELETE("/penjadwalan/:id_penjadwalan", controllers.Penjadwalan_hapus)
+	r.PUT("/akses", controllers.Update_akses)
 
+	//REST API UNTUK MAHASISWA
 	r.GET("/presensi", controllers.Get_presensi)
 	r.POST("/presensi", controllers.Post_presensi)
-	// r.PUT("/kehadiran/:id_kehadiran", controllers.Kehadiran_ubah)
-	// r.DELETE("/kehadiran/:id_kehadiran", controllers.Kehadiran_hapus)
 
+	//REST API UNTUK PROGRAMMER
+	r.GET("/dosen", controllers.Dosen)
+	r.GET("/kelas", controllers.Kelas)
+	r.GET("/mahasiswa", controllers.Mahasiswa)
 	r.GET("/akumulasi", controllers.Get_akumulasi)
-
 	r.GET("/jam", controllers.Jam_perkuliahan)
 
 	r.Run()

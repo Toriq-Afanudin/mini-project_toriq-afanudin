@@ -80,10 +80,23 @@ func Post_presensi(c *gin.Context) {
 		return
 	}
 
-	//JIKA SEMUA VALIDASI LOLOS MAKA DATA AKAN DI INPUTKAN
+	//MEMASTIKAN PRESENSI DI IZINKAN OLEH DOSEN
+	var e models.Penjadwalan
 	var v4 int
-	if (v1 != 1) && (v2 != 1) && (v3 != 1) {
+	db.Where("matakuliah = ?", Input.Matakuliah).Where("tanggal_perkuliahan = ?", Input.Tanggal_perkuliahan).Find(&e)
+	if e.Akses != 1 {
 		v4 = 1
+		c.JSON(400, gin.H{
+			"status":  "error",
+			"message": "presensi tidak di izinkan oleh dosen pengampu",
+		})
+		return
+	}
+
+	//JIKA SEMUA VALIDASI LOLOS MAKA DATA AKAN DI INPUTKAN
+	var trigger int
+	if (v1 != 1) && (v2 != 1) && (v3 != 1) && (v4 != 1) {
+		trigger = 1
 		db.Create(&input)
 		type Tampilkan struct {
 			Matakuliah string
@@ -103,12 +116,13 @@ func Post_presensi(c *gin.Context) {
 	}
 
 	//TRIGER JUMLAH HADIR
-	if v4 == 1 {
+	if trigger == 1 {
 		var a models.Akumulasi
 		var Akumulasi []models.Akumulasi
 		db.Where("matakuliah = ?", Input.Matakuliah).Where("nama = ?", Input.Nama_mahasiswa).Find(&a)
 		a.Hadir++
 		a.Tidak = a.Pertemuan - a.Hadir
 		db.Model(&Akumulasi).Where("matakuliah = ?", Input.Matakuliah).Where("nama = ?", Input.Nama_mahasiswa).Update("hadir", a.Hadir).Update("tidak", a.Tidak).Update("tidak", a.Tidak)
+		return
 	}
 }
