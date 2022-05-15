@@ -26,19 +26,22 @@ func main() {
 	})
 
 	//REST API UNTUK DOSEN
-	r.GET("/penjadwalan", controllers.Get_penjadwalan)
-	r.POST("/penjadwalan", controllers.Post_penjadwalan)
-	r.PUT("/akses", controllers.Update_akses)
+	r.GET("/jadwal/:nip", controllers.Get_jadwal)
+	r.POST("/jadwal/:nip", controllers.Post_jadwal)
+	r.PUT("/akses/:nip", controllers.Update_akses)
+	r.GET("/akumulasi/:nip", controllers.Akumulasi_matakuliah)
+	r.GET("/kehadiran/:nip/:tanggal_perkuliahan", controllers.Presensi_matakuliah)
 
 	//REST API UNTUK MAHASISWA
-	r.GET("/presensi", controllers.Get_presensi)
+	r.GET("/penjadwalan", controllers.Get_penjadwalan)
+	r.GET("/presensi_mahasiswa/:nama_mahasiswa", controllers.Presensi_mahasiswa)
 	r.POST("/presensi", controllers.Post_presensi)
+	r.GET("/akumulasi_nama/:nama", controllers.Akumulasi_mahasiswa)
 
 	//REST API UNTUK PROGRAMMER/ MELIHAT TABEL REFERENSI
 	r.GET("/dosen", controllers.Dosen)
 	r.GET("/kelas", controllers.Kelas)
 	r.GET("/mahasiswa", controllers.Mahasiswa)
-	r.GET("/akumulasi", controllers.Get_akumulasi)
 	r.GET("/jam", controllers.Jam_perkuliahan)
 
 	r.Run()

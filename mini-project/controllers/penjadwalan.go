@@ -25,7 +25,20 @@ func Get_penjadwalan(c *gin.Context) {
 	})
 }
 
-func Post_penjadwalan(c *gin.Context) {
+func Get_jadwal(c *gin.Context) {
+	db := c.MustGet("db").(*gorm.DB)
+	var d models.Dosen_pengampu
+	db.Where("nip = ?", c.Param("nip")).Find(&d)
+
+	var Jadwal []models.Penjadwalan
+	db.Where("dosen_pengampu_tanpa_gelar = ?", d.Tanpa_gelar).Find(&Jadwal)
+	c.JSON(200, gin.H{
+		"status": "data berhasil di peroleh",
+		"data":   Jadwal,
+	})
+}
+
+func Post_jadwal(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 
 	//MEMASTIKAN INPUTAN DALAM BENTUK JSON
@@ -47,15 +60,17 @@ func Post_penjadwalan(c *gin.Context) {
 	}
 
 	//VALIDASI KELAS (MATAKULIAH DAN DOSEN)
+	var h models.Dosen_pengampu
+	db.Where("nip = ?", c.Param("nip")).Find(&h)
 	var k models.Kelas
-	db.Where("matakuliah = ?", Input.Matakuliah).Where("dosen_pengampu_tanpa_gelar = ?", Input.Dosen_pengampu_tanpa_gelar).Find(&k)
+	db.Where("matakuliah = ?", Input.Matakuliah).Where("dosen_pengampu_tanpa_gelar = ?", h.Tanpa_gelar).Find(&k)
 	var v1 bool //validasi
-	if (k.Matakuliah != Input.Matakuliah) && (k.Dosen_pengampu_tanpa_gelar != Input.Dosen_pengampu_tanpa_gelar) {
+	if (k.Matakuliah != Input.Matakuliah) && (k.Dosen_pengampu_tanpa_gelar != h.Tanpa_gelar) {
 		v1 = true
 		c.JSON(400, gin.H{
 			"status":  "error",
 			"message": "kelas tidak ditemukan",
-			"saran":   "cek kembali matakuliah atau nama dosen",
+			"saran":   "cek kembali matakuliah atau nip",
 		})
 		return
 	}

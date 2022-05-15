@@ -1,7 +1,6 @@
 package models
 
 type Penjadwalan struct {
-	Id_penjadwalan             int    `json:"id_penjadwalan"`
 	Matakuliah                 string `json:"matakuliah"`
 	Dosen_pengampu_tanpa_gelar string `json:"dosen_pengampu_tanpa_gelar"`
 	Tanggal_perkuliahan        string `json:"tanggal_perkuliahan"`
@@ -10,16 +9,16 @@ type Penjadwalan struct {
 }
 
 type Kehadiran struct {
-	Id_kehadiran        int    `json:"id_kehadiran"`
 	Matakuliah          string `json:"matakuliah"`
 	Nama_mahasiswa      string `json:"nama_mahasiswa"`
 	Tanggal_perkuliahan string `json:"tanggal_perkuliahan"`
 }
 
 type Dosen_pengampu struct {
-	Id_dosen     string `json:"id_dosen"`
-	Nama         string `json:"nama"`
-	Niy_nidn_nip string `json:"niy_nidn_nip"`
+	Id_dosen    string `json:"id_dosen"`
+	Nama        string `json:"nama"`
+	Nip         string `json:"nip"`
+	Tanpa_gelar string `json:"tanpa_gelar"`
 }
 
 type Kelas struct {
@@ -43,12 +42,11 @@ type Jam_perkuliahan struct {
 }
 
 type Akumulasi struct {
-	Id_akumulasi int    `json:"id_akumulasi"`
-	Matakuliah   string `json:"matakuliah"`
-	Nama         string `json:"nama"`
-	Pertemuan    int    `json:"pertemuan"`
-	Hadir        int    `json:"hadir"`
-	Tidak        int    `json:"tidak"`
+	Matakuliah string `json:"matakuliah"`
+	Nama       string `json:"nama"`
+	Pertemuan  int    `json:"pertemuan"`
+	Hadir      int    `json:"hadir"`
+	Tidak      int    `json:"tidak"`
 }
 
 type Tanggal struct {

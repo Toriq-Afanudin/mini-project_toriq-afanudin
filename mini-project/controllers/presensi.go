@@ -14,11 +14,25 @@ type Input_presensi struct {
 	Tanggal_perkuliahan string `json:"tanggal_perkuliahan"`
 }
 
-func Get_presensi(c *gin.Context) {
+func Presensi_mahasiswa(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	var Jadwal []models.Kehadiran
-	db.Find(&Jadwal)
+	db.Where("nama_mahasiswa = ?", c.Param("nama_mahasiswa")).Find(&Jadwal)
 	c.JSON(http.StatusOK, gin.H{"data": Jadwal})
+}
+
+func Presensi_matakuliah(c *gin.Context) {
+	db := c.MustGet("db").(*gorm.DB)
+
+	var h models.Dosen_pengampu
+	db.Where("nip = ?", c.Param("nip")).Find(&h)
+
+	var g models.Kelas
+	db.Where("dosen_pengampu_tanpa_gelar = ?", h.Tanpa_gelar).Find(&g)
+
+	var Kehadiran []models.Kehadiran
+	db.Where("matakuliah = ?", g.Matakuliah).Where("tanggal_perkuliahan = ?", c.Param("tanggal_perkuliahan")).Find(&Kehadiran)
+	c.JSON(http.StatusOK, gin.H{"data": Kehadiran})
 }
 
 func Post_presensi(c *gin.Context) {
