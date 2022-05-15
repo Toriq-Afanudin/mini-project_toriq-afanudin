@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"mini_project/models"
 
 	"github.com/gin-gonic/gin"
@@ -117,7 +116,6 @@ func Post_penjadwalan(c *gin.Context) {
 	var d models.Libur
 	db.Where("tanggal = ?", Input.Tanggal_perkuliahan).Find(&d)
 	var v6 bool
-	fmt.Println(c)
 	if d.Tanggal == Input.Tanggal_perkuliahan {
 		v6 = true
 		c.JSON(400, gin.H{
@@ -131,7 +129,6 @@ func Post_penjadwalan(c *gin.Context) {
 	var b models.Tanggal
 	db.Where("tanggal = ?", Input.Tanggal_perkuliahan).Find(&b)
 	var v7 bool
-	fmt.Println(b)
 	if b.Tanggal != Input.Tanggal_perkuliahan {
 		v7 = true
 		c.JSON(400, gin.H{
