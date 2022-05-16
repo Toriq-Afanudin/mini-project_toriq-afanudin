@@ -15,10 +15,12 @@ func main() {
 		c.Next()
 	})
 
+	//REST API USER DOSEN
 	r.POST("login", controls.Login)
 	r.PUT("editJadwal/:nip", controls.EditJadwal)
 	r.GET("akumulasi/:nip", controls.DosenAkumulasi)
 
+	//REST API USER MAHASISWA
 	r.POST("presensi/:nim", controls.Presensi)
 	r.GET("akumulasiMahasiswa/:nim", controls.MahasiswaAkumulasi)
 	r.GET("presensi/:nim", controls.LihatPresensi)
