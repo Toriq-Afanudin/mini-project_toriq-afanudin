@@ -40,7 +40,7 @@ func EditJadwal(c *gin.Context) {
 		return
 	}
 
-	//VALIDASI JAM PERKULIAHAN
+	//VALIDASI:	MEMASTIKAN JAM PERKULIAHAN SESUAI DI DATABASE
 	var column3 tabels.Jam
 	db.Where("jam = ?", ed.Jam).Find(&column3)
 	if ed.Jam != column3.Jam {
@@ -51,7 +51,7 @@ func EditJadwal(c *gin.Context) {
 		return
 	}
 
-	//VALIDASI DOSEN MENGAJAR
+	//VALIDASI: MEMASTIKAN DOSEN MENGAJAR KELAS SESUAI INPUTAN
 	var column4 tabels.Dosen
 	db.Where("nip = ?", c.Param("nip")).Find(&column4)
 	var column5 tabels.Krs
@@ -64,7 +64,7 @@ func EditJadwal(c *gin.Context) {
 		return
 	}
 
-	//VALIDASI APAKAH SUDAH ADA YANG PRESENSI
+	//VALIDASI: MEMASTIKAN BELUM ADA MAHASISWA YANG PRESENSI
 	var column tabels.Jadwal
 	db.Where("matakuliah = ?", ed.Matakuliah).Where("kelas = ?", ed.Kelas).Where("pertemuan = ?", ed.Pertemuan).Find(&column)
 	if column.Presensi != 0 {

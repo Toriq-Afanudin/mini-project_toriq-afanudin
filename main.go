@@ -17,8 +17,11 @@ func main() {
 
 	r.POST("login", controls.Login)
 	r.PUT("editJadwal/:nip", controls.EditJadwal)
+	r.GET("akumulasi/:nip", controls.DosenAkumulasi)
 
 	r.POST("presensi/:nim", controls.Presensi)
+	r.GET("akumulasiMahasiswa/:nim", controls.MahasiswaAkumulasi)
+	r.GET("presensi/:nim", controls.LihatPresensi)
 
 	r.Run()
 }

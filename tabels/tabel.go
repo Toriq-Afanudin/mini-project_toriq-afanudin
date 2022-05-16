@@ -1,5 +1,11 @@
 package tabels
 
+type Akumulasi struct {
+	Nama       string `json:"nama"`
+	Matakuliah string `json:"matakuliah"`
+	Hadir      int    `json:"hadir"`
+}
+
 type Dosen struct {
 	Id       int    `json:"id"`
 	Nama     string `json:"nama"`
@@ -48,7 +54,6 @@ type Mahasiswa struct {
 }
 
 type Presensi struct {
-	Id         int    `json:"id"`
 	Nama       string `json:"nama"`
 	Matakuliah string `json:"matakuliah"`
 	Kelas      string `json:"kelas"`
