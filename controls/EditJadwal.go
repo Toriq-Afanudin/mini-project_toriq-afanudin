@@ -64,20 +64,26 @@ func EditJadwal(c *gin.Context) {
 		return
 	}
 
-	//JIKA LOLOS VALIDASI MAKA DATA AKAN DI UPDATE
+	//VALIDASI APAKAH SUDAH ADA YANG PRESENSI
 	var column tabels.Jadwal
-	var tabel []tabels.Jadwal
 	db.Where("matakuliah = ?", ed.Matakuliah).Where("kelas = ?", ed.Kelas).Where("pertemuan = ?", ed.Pertemuan).Find(&column)
-	if ed.Matakuliah == column.Matakuliah {
-		db.Model(&tabel).Where("matakuliah = ?", ed.Matakuliah).Where("kelas = ?", ed.Kelas).Where("pertemuan = ?", ed.Pertemuan).Update("tanggal", ed.Tanggal).Update("jam", ed.Jam)
-		c.JSON(200, gin.H{
-			"status":     "berhasil merubah jadwal",
-			"nama":       column4.Gelar,
-			"matakuliah": ed.Matakuliah,
-			"kelas":      ed.Kelas,
-			"tanggal":    ed.Tanggal,
-			"jam":        ed.Jam,
+	if column.Presensi != 0 {
+		c.JSON(400, gin.H{
+			"status":  "error",
+			"message": "tidak dapat mengubah jadwal, sudah ada mahasiswa yang presensi",
 		})
 		return
 	}
+
+	//JIKA LOLOS VALIDASI MAKA DATA AKAN DI UPDATE
+	var tabel []tabels.Jadwal
+	db.Model(&tabel).Where("matakuliah = ?", ed.Matakuliah).Where("kelas = ?", ed.Kelas).Where("pertemuan = ?", ed.Pertemuan).Update("tanggal", ed.Tanggal).Update("jam", ed.Jam)
+	c.JSON(200, gin.H{
+		"status":     "berhasil merubah jadwal",
+		"nama":       column4.Gelar,
+		"matakuliah": ed.Matakuliah,
+		"kelas":      ed.Kelas,
+		"tanggal":    ed.Tanggal,
+		"jam":        ed.Jam,
+	})
 }
