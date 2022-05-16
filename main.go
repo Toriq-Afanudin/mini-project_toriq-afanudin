@@ -16,7 +16,7 @@ func main() {
 	})
 
 	r.POST("login", controls.Login)
-	r.PUT("editJadwal/:nomer", controls.EditJadwal)
+	r.PUT("editJadwal/:nip", controls.EditJadwal)
 
 	r.POST("presensi/:nim", controls.Presensi)
 

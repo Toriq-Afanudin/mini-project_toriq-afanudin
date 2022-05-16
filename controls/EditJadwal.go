@@ -53,7 +53,7 @@ func EditJadwal(c *gin.Context) {
 
 	//VALIDASI DOSEN MENGAJAR
 	var column4 tabels.Dosen
-	db.Where("nip = ?", c.Param("nomer")).Find(&column4)
+	db.Where("nip = ?", c.Param("nip")).Find(&column4)
 	var column5 tabels.Krs
 	db.Where("matakuliah = ?", ed.Matakuliah).Where("kelas = ?", ed.Kelas).Where("dosen = ?", column4.Gelar).Find(&column5)
 	if ed.Matakuliah != column5.Matakuliah {
