@@ -76,4 +76,9 @@ func Presensi(c *gin.Context) {
 		"matakuliah": pr.Matakuliah,
 		"tanggal":    pr.Tanggal,
 	})
+
+	//TRIGGER PRESENSI
+	column2.Presensi++
+	var tabel []tabels.Jadwal
+	db.Model(&tabel).Where("matakuliah = ?", pr.Matakuliah).Where("kelas = ?", pr.Kelas).Where("tanggal = ?", pr.Tanggal).Update("presensi", column2.Presensi)
 }
