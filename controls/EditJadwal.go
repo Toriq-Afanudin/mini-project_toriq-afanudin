@@ -7,8 +7,10 @@ import (
 )
 
 func EditJadwal(c *gin.Context) {
+	//KONEKSI KE DATABASE
 	db := c.MustGet("db").(*gorm.DB)
 
+	//TYPE INPUTAN
 	type edit struct {
 		Matakuliah string `json:"matakuliah"`
 		Kelas      string `json:"kelas"`
@@ -17,6 +19,7 @@ func EditJadwal(c *gin.Context) {
 		Jam        string `json:"jam"`
 	}
 
+	//VALIDASI JSON
 	var ed edit
 	if err := c.ShouldBindJSON(&ed); err != nil {
 		c.JSON(400, gin.H{
@@ -61,6 +64,7 @@ func EditJadwal(c *gin.Context) {
 		return
 	}
 
+	//JIKA LOLOS VALIDASI MAKA DATA AKAN DI UPDATE
 	var column tabels.Jadwal
 	var tabel []tabels.Jadwal
 	db.Where("matakuliah = ?", ed.Matakuliah).Where("kelas = ?", ed.Kelas).Where("pertemuan = ?", ed.Pertemuan).Find(&column)
