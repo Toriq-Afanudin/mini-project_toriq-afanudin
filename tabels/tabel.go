@@ -23,6 +23,7 @@ type Jadwal struct {
 	Jam        string `json:"jam"`
 	Akses      int    `json:"akses"`
 	Presensi   int    `json:"presensi"`
+	Dosen      int    `json:"dosen"`
 }
 
 type Jam struct {
