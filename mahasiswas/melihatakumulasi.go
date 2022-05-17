@@ -12,11 +12,16 @@ func MahasiswaAkumulasi(c *gin.Context) {
 
 	var column tabels.Mahasiswa
 	db.Where("nim = ?", c.Param("nim")).Find(&column)
-	var tabel []tabels.Akumulasi
+	type akumulasi struct {
+		Matakuliah string
+		Hadir      string
+	}
+	var tabel []akumulasi
 	db.Where("nama = ?", column.Nama).Find(&tabel)
 
 	c.JSON(200, gin.H{
 		"status": "berhasil",
+		"nama":   column.Nama,
 		"data":   tabel,
 	})
 }

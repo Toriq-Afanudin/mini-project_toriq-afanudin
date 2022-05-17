@@ -62,12 +62,18 @@ func Presensi(c *gin.Context) {
 		return
 	}
 
+	var column5 tabels.Krs
+	db.Where("matakuliah = ?", p.Matakuliah).Where("kelas = ?", p.Kelas).Find(&column5)
+	var column7 tabels.Dosen
+	db.Where("gelar = ?", column5.Dosen).Find(&column7)
+
 	//JIKA SUDAH LOLOS VALIDASI, MAKA DATA AKAN DI INPUTKAN
 	pr := tabels.Presensi{
 		Nama:       column.Nama,
 		Matakuliah: p.Matakuliah,
 		Kelas:      p.Kelas,
 		Tanggal:    p.Tanggal,
+		Dosen:      column7.Id,
 	}
 	db.Create(&pr)
 	c.JSON(200, gin.H{

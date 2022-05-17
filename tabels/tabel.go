@@ -58,6 +58,7 @@ type Presensi struct {
 	Matakuliah string `json:"matakuliah"`
 	Kelas      string `json:"kelas"`
 	Tanggal    string `json:"tanggal"`
+	Dosen      int    `json:"dosen"`
 }
 
 type Tanggal struct {
