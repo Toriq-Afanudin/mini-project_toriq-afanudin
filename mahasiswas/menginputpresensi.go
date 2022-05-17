@@ -1,4 +1,4 @@
-package controls
+package mahasiswas
 
 import (
 	"github.com/gin-gonic/gin"

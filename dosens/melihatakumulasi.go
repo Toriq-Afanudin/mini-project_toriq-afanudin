@@ -1,4 +1,4 @@
-package controls
+package dosens
 
 import (
 	"github.com/gin-gonic/gin"
@@ -13,7 +13,7 @@ func DosenAkumulasi(c *gin.Context) {
 	var column tabels.Dosen
 	db.Where("nip = ?", c.Param("nip")).Find(&column)
 	var tabel []tabels.Akumulasi
-	db.Where("dosen = ?", column.Gelar).Find(&tabel)
+	db.Where("dosen = ?", column.Id).Find(&tabel)
 
 	c.JSON(200, gin.H{
 		"status": "berhasil",

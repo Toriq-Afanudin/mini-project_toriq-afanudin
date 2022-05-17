@@ -1,8 +1,8 @@
 package tabels
 
 type Akumulasi struct {
-	Nama       string `json:"nama"`
 	Matakuliah string `json:"matakuliah"`
+	Nama       string `json:"nama"`
 	Hadir      int    `json:"hadir"`
 }
 

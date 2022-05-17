@@ -1,7 +1,7 @@
 package main
 
 import (
-	"mini.com/controls"
+	"mini.com/dosens"
 	"mini.com/tabels"
 
 	"github.com/gin-gonic/gin"
@@ -16,14 +16,14 @@ func main() {
 	})
 
 	//REST API USER DOSEN
-	r.POST("login", controls.Login)
-	r.PUT("editJadwal/:nip", controls.EditJadwal)
-	r.GET("akumulasi/:nip", controls.DosenAkumulasi)
+	r.POST("login", dosens.Login)
+	r.PUT("editJadwal/:nip", dosens.EditJadwal)
+	r.GET("akumulasi/:nip", dosens.DosenAkumulasi)
 
 	//REST API USER MAHASISWA
-	r.POST("presensi/:nim", controls.Presensi)
-	r.GET("akumulasiMahasiswa/:nim", controls.MahasiswaAkumulasi)
-	r.GET("presensi/:nim", controls.LihatPresensi)
+	r.POST("presensi/:nim", mahasiswas.Presensi)
+	r.GET("akumulasiMahasiswa/:nim", mahasiswas.MahasiswaAkumulasi)
+	r.GET("presensi/:nim", mahasiswas.LihatPresensi)
 
 	r.Run()
 }

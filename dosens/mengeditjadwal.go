@@ -1,4 +1,4 @@
-package controls
+package dosens
 
 import (
 	"github.com/gin-gonic/gin"
