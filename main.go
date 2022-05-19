@@ -4,8 +4,8 @@ import (
 	"log"
 	"net/http"
 
+	"mini.com/controllers"
 	"mini.com/dosens"
-	"mini.com/mahasiswas"
 	"mini.com/tabels"
 
 	"time"
@@ -130,15 +130,15 @@ func main() {
 	auth.GET("/refresh_token", authMiddleware.RefreshHandler)
 	auth.Use(authMiddleware.MiddlewareFunc())
 	{
-		auth.GET("/historiPresensi", mahasiswas.HistoriPresensi)
-		auth.GET("/akumulasiPresensi", mahasiswas.AkumulasiPresensi)
+		auth.GET("/historiPresensi", controllers.HistoriPresensi)
+		auth.GET("/akumulasiPresensi", controllers.AkumulasiPresensi)
+		auth.POST("/presensi", controllers.CreatePresensi)
+
 		auth.PUT("editJadwal", dosens.EditJadwal)
 		auth.GET("akumulasi/:nip", dosens.DosenAkumulasi)
 		auth.GET("melihatpresensi/:nip", dosens.MelihatPresensi)
 		auth.GET("melihatjadwal/:nip", dosens.LihatJadwal)
 		auth.PUT("mengubahakses/:nip", dosens.MengubahAkses)
-
-		auth.POST("presensi/:nim", mahasiswas.GetPresence)
 	}
 
 	if err := http.ListenAndServe(":"+"8080", r); err != nil {
