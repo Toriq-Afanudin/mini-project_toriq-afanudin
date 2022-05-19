@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"net/http"
 
 	"mini.com/dosens"
 	"mini.com/mahasiswas"
@@ -15,49 +16,40 @@ import (
 )
 
 type login struct {
-	Nama string `json:"nama"`
-	Nim  string `json:"nim"`
+	Username string `json:"username"`
+	Password string `json:"password"`
 }
 
-var identityKey = "id"
-
-// User demo
-type User struct {
-	UserName  string
-	FirstName string
-	LastName  string
-}
+var IdentityKey = "id"
 
 func main() {
 	r := gin.Default()
-
 	db := tabels.SetupModels()
 	r.Use(func(c *gin.Context) {
 		c.Set("db", db)
 		c.Next()
 	})
-
-	var nama string
+	var us tabels.User
 
 	// the jwt middleware
 	authMiddleware, err := jwt.New(&jwt.GinJWTMiddleware{
 		Realm:       "Toriq Zone",
-		Key:         []byte("njksdendjnjhdbjsnddjhjbdgj"),
+		Key:         []byte("kbjhfhgcjhbhfcd"),
 		Timeout:     time.Hour,
 		MaxRefresh:  time.Hour,
-		IdentityKey: identityKey,
+		IdentityKey: IdentityKey,
 		PayloadFunc: func(data interface{}) jwt.MapClaims {
-			if v, ok := data.(*User); ok {
+			if v, ok := data.(*tabels.User); ok {
 				return jwt.MapClaims{
-					identityKey: v.UserName,
+					IdentityKey: v.UserName,
 				}
 			}
 			return jwt.MapClaims{}
 		},
 		IdentityHandler: func(c *gin.Context) interface{} {
 			claims := jwt.ExtractClaims(c)
-			return &User{
-				UserName: claims[identityKey].(string),
+			return &tabels.User{
+				UserName: claims[IdentityKey].(string),
 			}
 		},
 		Authenticator: func(c *gin.Context) (interface{}, error) {
@@ -65,15 +57,14 @@ func main() {
 			if err := c.ShouldBind(&loginVals); err != nil {
 				return "", jwt.ErrMissingLoginValues
 			}
-			userID := loginVals.Nama
-			password := loginVals.Nim
+			userID := loginVals.Username
+			password := loginVals.Password
+			var student tabels.Mahasiswa
+			db.Where("nama = ?", userID).Where("password = ?", password).Find(&student)
+			us.UserName = student.Nama
 
-			var mahasiswa tabels.Mahasiswa
-			db.Where("nama = ?", userID).Where("nim = ?", password).Find(&mahasiswa)
-			nama = mahasiswa.Nama
-
-			if (userID == mahasiswa.Nama && password == mahasiswa.Nim) || (userID == "test" && password == "test") {
-				return &User{
+			if (userID == student.Nama && password == student.Password) || (userID == "test" && password == "test") {
+				return &tabels.User{
 					UserName:  userID,
 					LastName:  "Bo-Yi",
 					FirstName: "Wu",
@@ -83,7 +74,7 @@ func main() {
 			return nil, jwt.ErrFailedAuthentication
 		},
 		Authorizator: func(data interface{}, c *gin.Context) bool {
-			if v, ok := data.(*User); ok && v.UserName == nama {
+			if v, ok := data.(*tabels.User); ok && v.UserName == us.UserName {
 				return true
 			}
 
@@ -95,15 +86,31 @@ func main() {
 				"message": message,
 			})
 		},
-		TokenLookup:   "header: Authorization, query: token, cookie: jwt",
+		// TokenLookup is a string in the form of "<source>:<name>" that is used
+		// to extract token from the request.
+		// Optional. Default value "header:Authorization".
+		// Possible values:
+		// - "header:<name>"
+		// - "query:<name>"
+		// - "cookie:<name>"
+		// - "param:<name>"
+		TokenLookup: "header: Authorization, query: token, cookie: jwt",
+		// TokenLookup: "query:token",
+		// TokenLookup: "cookie:token",
+
+		// TokenHeadName is a string in the header. Default value is "Bearer"
 		TokenHeadName: "Bearer",
-		TimeFunc:      time.Now,
+
+		// TimeFunc provides the current time. You can override it to use another time value. This is useful for testing or if your server uses a different time zone than your tokens.
+		TimeFunc: time.Now,
 	})
 
 	if err != nil {
 		log.Fatal("JWT Error:" + err.Error())
 	}
 
+	// When you use jwt.New(), the function is already automatically called for checking,
+	// which means you don't need to call it again.
 	errInit := authMiddleware.MiddlewareInit()
 
 	if errInit != nil {
@@ -123,18 +130,19 @@ func main() {
 	auth.GET("/refresh_token", authMiddleware.RefreshHandler)
 	auth.Use(authMiddleware.MiddlewareFunc())
 	{
-		auth.GET("/hello", func(c *gin.Context) {
-			c.JSON(200, gin.H{"status": "berhasil masuk dengan token jwt"})
-		})
-		auth.PUT("editJadwal/:nip ", dosens.EditJadwal)
+		auth.GET("/historiPresensi", mahasiswas.HistoriPresensi)
+		auth.GET("/akumulasiPresensi", mahasiswas.AkumulasiPresensi)
+		auth.PUT("editJadwal", dosens.EditJadwal)
 		auth.GET("akumulasi/:nip", dosens.DosenAkumulasi)
 		auth.GET("melihatpresensi/:nip", dosens.MelihatPresensi)
 		auth.GET("melihatjadwal/:nip", dosens.LihatJadwal)
 		auth.PUT("mengubahakses/:nip", dosens.MengubahAkses)
 
-		auth.POST("presensi/:nim", mahasiswas.Presensi)
-		auth.GET("akumulasiMahasiswa/:nim", mahasiswas.MahasiswaAkumulasi)
-		auth.GET("presensi/:nim", mahasiswas.LihatPresensi)
+		auth.POST("presensi/:nim", mahasiswas.GetPresence)
+	}
+
+	if err := http.ListenAndServe(":"+"8080", r); err != nil {
+		log.Fatal(err)
 	}
 
 	r.Run()

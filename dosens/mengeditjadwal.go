@@ -54,15 +54,15 @@ func EditJadwal(c *gin.Context) {
 	//VALIDASI: MEMASTIKAN DOSEN MENGAJAR KELAS SESUAI INPUTAN
 	var column4 tabels.Dosen
 	db.Where("nip = ?", c.Param("nip")).Find(&column4)
-	var column5 tabels.Krs
-	db.Where("matakuliah = ?", ed.Matakuliah).Where("kelas = ?", ed.Kelas).Where("dosen = ?", column4.Gelar).Find(&column5)
-	if ed.Matakuliah != column5.Matakuliah {
-		c.JSON(400, gin.H{
-			"status":  "error",
-			"message": "anda tidak mengajar di kelas ini",
-		})
-		return
-	}
+	// var column5 tabels.Krs
+	// db.Where("matakuliah = ?", ed.Matakuliah).Where("kelas = ?", ed.Kelas).Where("dosen = ?", column4.Gelar).Find(&column5)
+	// if ed.Matakuliah != column5.Matakuliah {
+	// 	c.JSON(400, gin.H{
+	// 		"status":  "error",
+	// 		"message": "anda tidak mengajar di kelas ini",
+	// 	})
+	// 	return
+	// }
 
 	//VALIDASI: MEMASTIKAN BELUM ADA MAHASISWA YANG PRESENSI
 	var column tabels.Jadwal
@@ -80,7 +80,7 @@ func EditJadwal(c *gin.Context) {
 	db.Model(&tabel).Where("matakuliah = ?", ed.Matakuliah).Where("kelas = ?", ed.Kelas).Where("pertemuan = ?", ed.Pertemuan).Update("tanggal", ed.Tanggal).Update("jam", ed.Jam)
 	c.JSON(200, gin.H{
 		"status":     "berhasil merubah jadwal",
-		"nama":       column4.Gelar,
+		"nama":       column4.Nama,
 		"matakuliah": ed.Matakuliah,
 		"kelas":      ed.Kelas,
 		"tanggal":    ed.Tanggal,

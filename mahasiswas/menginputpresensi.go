@@ -6,34 +6,34 @@ import (
 	"mini.com/tabels"
 )
 
-func Presensi(c *gin.Context) {
+func GetPresence(c *gin.Context) {
 	//KONEKSI KE DATABASE
 	db := c.MustGet("db").(*gorm.DB)
 
 	//TYPE INPUTAN
-	type presensi struct {
+	type presence struct {
 		Matakuliah string `json:"matakuliah"`
 		Kelas      string `json:"kelas"`
 		Tanggal    string `json:"tanggal"`
 	}
 
 	//VALIDASI JSON
-	var p presensi
-	if err := c.ShouldBindJSON(&p); err != nil {
+	var studentPresence presence
+	if err := c.ShouldBindJSON(&studentPresence); err != nil {
 		c.JSON(400, gin.H{
 			"status":  "error",
-			"message": "input tidak dalam bentuk json",
+			"message": "input is not in json form",
 		})
 		return
 	}
 
 	//VALIDASI: MEMASTIKAN INPUTAN ADA DI JADWAL
-	var column2 tabels.Jadwal
-	db.Where("tanggal = ?", p.Tanggal).Where("matakuliah = ?", p.Matakuliah).Where("kelas = ?", p.Kelas).Where("akses = ?", 1).Find(&column2)
-	if p.Tanggal != column2.Tanggal {
+	var timetable tabels.Jadwal
+	db.Where("tanggal = ?", studentPresence.Tanggal).Where("matakuliah = ?", studentPresence.Matakuliah).Where("kelas = ?", studentPresence.Kelas).Where("akses = ?", 1).Find(&timetable)
+	if studentPresence.Tanggal != timetable.Tanggal {
 		c.JSON(400, gin.H{
 			"status":  "error",
-			"message": "kelas ini tidak dijadwalkan atau di tutup oleh dosen",
+			"message": "this class is not scheduled or closed by the lecturer",
 		})
 		return
 	}
@@ -42,7 +42,7 @@ func Presensi(c *gin.Context) {
 	var column tabels.Mahasiswa
 	db.Where("nim = ?", c.Param("nim")).Find(&column)
 	var column3 tabels.Presensi
-	db.Where("nama = ?", column.Nama).Where("matakuliah = ?", p.Matakuliah).Where("tanggal = ?", p.Tanggal).Find(&column3)
+	db.Where("nama = ?", column.Nama).Where("matakuliah = ?", studentPresence.Matakuliah).Where("tanggal = ?", studentPresence.Tanggal).Find(&column3)
 	if column.Nama == column3.Nama {
 		c.JSON(400, gin.H{
 			"status":  "error",
@@ -53,7 +53,7 @@ func Presensi(c *gin.Context) {
 
 	//VALIDASI: MEMASTIKAN MAHASISWA MELAKUKAN KRS SESUAI INPUTAN
 	var column4 tabels.Krs
-	db.Where("nama = ?", column.Nama).Where("matakuliah = ?", p.Matakuliah).Where("kelas = ?", p.Kelas).Find(&column4)
+	db.Where("nama = ?", column.Nama).Where("matakuliah = ?", studentPresence.Matakuliah).Where("kelas = ?", studentPresence.Kelas).Find(&column4)
 	if column.Nama != column4.Nama {
 		c.JSON(400, gin.H{
 			"status":  "error",
@@ -63,16 +63,16 @@ func Presensi(c *gin.Context) {
 	}
 
 	var column5 tabels.Krs
-	db.Where("matakuliah = ?", p.Matakuliah).Where("kelas = ?", p.Kelas).Find(&column5)
+	db.Where("matakuliah = ?", studentPresence.Matakuliah).Where("kelas = ?", studentPresence.Kelas).Find(&column5)
 	var column7 tabels.Dosen
 	db.Where("gelar = ?", column5.Dosen).Find(&column7)
 
 	//JIKA SUDAH LOLOS VALIDASI, MAKA DATA AKAN DI INPUTKAN
 	pr := tabels.Presensi{
 		Nama:       column.Nama,
-		Matakuliah: p.Matakuliah,
-		Kelas:      p.Kelas,
-		Tanggal:    p.Tanggal,
+		Matakuliah: studentPresence.Matakuliah,
+		Kelas:      studentPresence.Kelas,
+		Tanggal:    studentPresence.Tanggal,
 		Dosen:      column7.Id,
 	}
 	db.Create(&pr)
@@ -84,9 +84,9 @@ func Presensi(c *gin.Context) {
 	})
 
 	//TRIGGER PRESENSI
-	column2.Presensi++
+	timetable.Presensi++
 	var tabel []tabels.Jadwal
-	db.Model(&tabel).Where("matakuliah = ?", pr.Matakuliah).Where("kelas = ?", pr.Kelas).Where("tanggal = ?", pr.Tanggal).Update("presensi", column2.Presensi)
+	db.Model(&tabel).Where("matakuliah = ?", pr.Matakuliah).Where("kelas = ?", pr.Kelas).Where("tanggal = ?", pr.Tanggal).Update("presensi", timetable.Presensi)
 	var column6 tabels.Akumulasi
 	db.Where("nama = ?", pr.Nama).Where("matakuliah = ?", pr.Matakuliah).Find(&column6)
 	column6.Hadir++

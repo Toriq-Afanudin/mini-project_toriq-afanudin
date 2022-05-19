@@ -66,3 +66,10 @@ type Tanggal struct {
 	Id      int    `json:"id"`
 	Tanggal string `json:"tanggal"`
 }
+
+// User demo
+type User struct {
+	UserName  string
+	FirstName string
+	LastName  string
+}
