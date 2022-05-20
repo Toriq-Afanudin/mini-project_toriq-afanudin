@@ -27,11 +27,11 @@ type jadwal struct {
 func HistoriPresensi(c *gin.Context) {
 	claims := jwt.ExtractClaims(c)
 	db := c.MustGet("db").(*gorm.DB)
-	var student []presensi
-	db.Raw("SELECT matakuliah, tanggal FROM sistem_presensi.presensis WHERE nama = ?", claims["id"]).Scan(&student)
+	var presensi []presensi
+	db.Raw("SELECT matakuliah, tanggal FROM sistem_presensi.presensis WHERE nama = ?", claims["id"]).Scan(&presensi)
 	c.JSON(200, gin.H{
 		"status": "berhasil",
-		"data":   student,
+		"data":   presensi,
 	})
 }
 
@@ -116,7 +116,6 @@ func GetJadwal(c *gin.Context) {
 			db.Where("dosen = ?", dosen.Id).Where("matakuliah = ?", Krs[i].Matakuliah).Where("pertemuan = ?", j).Find(&jadwal)
 			Jadwal = append(Jadwal, jadwal)
 		}
-
 	}
 	c.JSON(200, gin.H{
 		"status": "berhasil",

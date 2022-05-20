@@ -1,19 +1,22 @@
 package dosens
 
 import (
+	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	"mini.com/tabels"
 )
 
-func MengubahAkses(c *gin.Context) {
+type tanggal struct {
+	Tanggal    string `json:"tanggal"`
+	Matakuliah string `json:"matakuliah"`
+}
+
+func UpdateAkses(c *gin.Context) {
+	claims := jwt.ExtractClaims(c)
 	db := c.MustGet("db").(*gorm.DB)
 	var column tabels.Dosen
-	db.Where("nip = ?", c.Param("nip")).Find(&column)
-	type tanggal struct {
-		Tanggal    string `json:"tanggal"`
-		Matakuliah string `json:"matakuliah"`
-	}
+	db.Where("nama = ?", claims["id"]).Find(&column)
 	var column2 tanggal
 	if err := c.ShouldBindJSON(&column2); err != nil {
 		c.JSON(400, gin.H{
