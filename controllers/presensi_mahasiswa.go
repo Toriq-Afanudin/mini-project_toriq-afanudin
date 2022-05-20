@@ -18,6 +18,12 @@ type akumulasi struct {
 	Hadir      string `json:"hadir"`
 }
 
+type jadwal struct {
+	Matakuliah string `json:"matakuliah"`
+	Tanggal    string `json:"tanggal"`
+	Jam        string `json:"jam"`
+}
+
 func HistoriPresensi(c *gin.Context) {
 	claims := jwt.ExtractClaims(c)
 	db := c.MustGet("db").(*gorm.DB)
@@ -94,4 +100,26 @@ func CreatePresensi(c *gin.Context) {
 	akumulasi.Hadir++
 	var Akumulasi []tabels.Akumulasi
 	db.Model(&Akumulasi).Where("nama = ?", claims["id"]).Where("matakuliah = ?", input.Matakuliah).Update("hadir", akumulasi.Hadir)
+}
+
+func GetJadwal(c *gin.Context) {
+	claims := jwt.ExtractClaims(c)
+	db := c.MustGet("db").(*gorm.DB)
+	var Krs []tabels.Krs
+	db.Raw("SELECT matakuliah, dosen FROM sistem_presensi.krs WHERE nama = ?", claims["id"]).Scan(&Krs)
+	var Jadwal []interface{}
+	for i := 0; i < len(Krs); i++ {
+		for j := 1; j <= 5; j++ {
+			var dosen tabels.Dosen
+			db.Where("gelar = ?", Krs[i].Dosen).Find(&dosen)
+			var jadwal jadwal
+			db.Where("dosen = ?", dosen.Id).Where("matakuliah = ?", Krs[i].Matakuliah).Where("pertemuan = ?", j).Find(&jadwal)
+			Jadwal = append(Jadwal, jadwal)
+		}
+
+	}
+	c.JSON(200, gin.H{
+		"status": "berhasil",
+		"jadwal": Jadwal,
+	})
 }

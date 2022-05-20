@@ -133,6 +133,7 @@ func main() {
 		auth.GET("/historiPresensi", controllers.HistoriPresensi)
 		auth.GET("/akumulasiPresensi", controllers.AkumulasiPresensi)
 		auth.POST("/presensi", controllers.CreatePresensi)
+		auth.GET("/jadwal", controllers.GetJadwal)
 
 		auth.PUT("editJadwal", dosens.EditJadwal)
 		auth.GET("akumulasi/:nip", dosens.DosenAkumulasi)
