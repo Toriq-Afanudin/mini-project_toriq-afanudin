@@ -145,7 +145,7 @@ func MiddlewareMhs() {
 		author.GET("/melihatpresensi", dosens.MelihatPresensi)
 		author.GET("/melihatjadwal", dosens.GetJadwalDosen)
 		author.GET("/akumulasi", dosens.GetAkumulasi)
-		author.PUT("editJadwal", dosens.EditJadwal)
+		author.PUT("/editJadwal", dosens.EditJadwal)
 		author.PUT("/mengubahakses", dosens.UpdateAkses)
 	}
 	if err := http.ListenAndServe(":"+"8080", r); err != nil {

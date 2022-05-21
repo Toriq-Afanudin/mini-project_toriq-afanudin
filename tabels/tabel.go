@@ -69,7 +69,9 @@ type Tanggal struct {
 
 // User demo
 type User struct {
-	UserName  string
-	FirstName string
-	LastName  string
+	UserName  string `form:"username" json:"username"`
+	FirstName string `form:"firstname" json:"firstname"`
+	LastName  string `form:"lastname" json:"lastname"`
+	Password  string `form:"password" json:"password"`
+	Status    string `form:"status" json:"status"`
 }
