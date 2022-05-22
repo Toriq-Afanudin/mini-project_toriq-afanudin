@@ -18,6 +18,16 @@ type edit struct {
 func EditJadwal(c *gin.Context) {
 	claims := jwt.ExtractClaims(c)
 	db := c.MustGet("db").(*gorm.DB)
+	//VALIDASI USER
+	var userDosen tabels.Dosen
+	db.Where("nama = ?", claims["id"]).Find(&userDosen)
+	if claims["id"] != userDosen.Nama {
+		c.JSON(400, gin.H{
+			"status":  "error",
+			"message": "anda tidak berhak mengakses halaman ini",
+		})
+		return
+	}
 	//VALIDASI JSON
 	var edit edit
 	if err := c.ShouldBindJSON(&edit); err != nil {

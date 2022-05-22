@@ -20,15 +20,25 @@ type jadwalDosen struct {
 	Jam        string
 }
 
-type akumulasiDosen struct {
-	Nama       string
-	Matakuliah string
-	Hadir      int
-}
+// type akumulasiDosen struct {
+// 	Nama       string
+// 	Matakuliah string
+// 	Hadir      int
+// }
 
 func MelihatPresensi(c *gin.Context) {
 	claims := jwt.ExtractClaims(c)
 	db := c.MustGet("db").(*gorm.DB)
+	//VALIDASI USER
+	var userDosen tabels.Dosen
+	db.Where("nama = ?", claims["id"]).Find(&userDosen)
+	if claims["id"] != userDosen.Nama {
+		c.JSON(400, gin.H{
+			"status":  "error",
+			"message": "anda tidak berhak mengakses halaman ini",
+		})
+		return
+	}
 	var dosen tabels.Dosen
 	db.Where("nama = ?", claims["id"]).Find(&dosen)
 	var presensi []presensiDosen
@@ -42,6 +52,16 @@ func MelihatPresensi(c *gin.Context) {
 func GetJadwalDosen(c *gin.Context) {
 	claims := jwt.ExtractClaims(c)
 	db := c.MustGet("db").(*gorm.DB)
+	//VALIDASI USER
+	var userDosen tabels.Dosen
+	db.Where("nama = ?", claims["id"]).Find(&userDosen)
+	if claims["id"] != userDosen.Nama {
+		c.JSON(400, gin.H{
+			"status":  "error",
+			"message": "anda tidak berhak mengakses halaman ini",
+		})
+		return
+	}
 	var dosen tabels.Dosen
 	db.Where("nama = ?", claims["id"]).Find(&dosen)
 	var Jadwal []jadwalDosen
@@ -55,6 +75,16 @@ func GetJadwalDosen(c *gin.Context) {
 func GetAkumulasi(c *gin.Context) {
 	claims := jwt.ExtractClaims(c)
 	db := c.MustGet("db").(*gorm.DB)
+	//VALIDASI USER
+	var userDosen tabels.Dosen
+	db.Where("nama = ?", claims["id"]).Find(&userDosen)
+	if claims["id"] != userDosen.Nama {
+		c.JSON(400, gin.H{
+			"status":  "error",
+			"message": "anda tidak berhak mengakses halaman ini",
+		})
+		return
+	}
 	var dosen tabels.Dosen
 	db.Where("nama = ?", claims["id"]).Find(&dosen)
 	var Akumulasi []akumulasi

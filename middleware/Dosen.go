@@ -11,22 +11,14 @@ import (
 	"mini.com/tabels"
 )
 
-type login struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
-}
-
-var IdentityKey = "id"
-
-func MiddlewareMahasiswa() {
+func MiddlewareDosen() {
 	r := gin.Default()
 	db := tabels.SetupModels()
 	r.Use(func(c *gin.Context) {
 		c.Set("db", db)
 		c.Next()
 	})
-	var us tabels.User
-	var student tabels.Mahasiswa
+	var teacher tabels.Dosen
 	// the jwt middleware
 	authMiddleware, err := jwt.New(&jwt.GinJWTMiddleware{
 		Realm:       "Toriq Zone",
@@ -55,19 +47,19 @@ func MiddlewareMahasiswa() {
 			}
 			userID := loginVals.Username
 			password := loginVals.Password
-			db.Where("nama = ?", userID).Where("password = ?", password).Find(&student)
-			if userID == student.Nama && password == student.Password {
-				us.UserName = student.Nama
+			db.Where("nama = ?", userID).Where("password = ?", password).Find(&teacher)
+			if userID == teacher.Nama && password == teacher.Password {
 				return &tabels.User{
 					UserName:  userID,
 					LastName:  "Bo-Yi",
 					FirstName: "Wu",
 				}, nil
 			}
+
 			return nil, jwt.ErrFailedAuthentication
 		},
 		Authorizator: func(data interface{}, c *gin.Context) bool {
-			if v, ok := data.(*tabels.User); ok && v.UserName == us.UserName {
+			if v, ok := data.(*tabels.User); ok && v.UserName == teacher.Nama {
 				return true
 			}
 
@@ -108,21 +100,22 @@ func MiddlewareMahasiswa() {
 	if errInit != nil {
 		log.Fatal("authMiddleware.MiddlewareInit() Error:" + errInit.Error())
 	}
-	r.POST("/login", authMiddleware.LoginHandler)
+	r.POST("/loginDosen", authMiddleware.LoginHandler)
 	r.NoRoute(authMiddleware.MiddlewareFunc(), func(c *gin.Context) {
 		claims := jwt.ExtractClaims(c)
 		log.Printf("NoRoute claims: %#v\n", claims)
 		c.JSON(404, gin.H{"code": "PAGE_NOT_FOUND", "message": "Page not found"})
 	})
-	auth := r.Group("/mahasiswa")
+	auth := r.Group("/dosen")
 	// Refresh time can be longer than token timeout
 	auth.GET("/refresh_token", authMiddleware.RefreshHandler)
 	auth.Use(authMiddleware.MiddlewareFunc())
 	{
-		auth.GET("/historiPresensi", controllers.HistoriPresensi)
-		auth.GET("/akumulasiPresensi", controllers.AkumulasiPresensi)
-		auth.POST("/presensi", controllers.CreatePresensi)
-		auth.GET("/jadwal", controllers.GetJadwal)
+		auth.GET("/melihatpresensi", controllers.MelihatPresensi)
+		auth.GET("/melihatjadwal", controllers.GetJadwalDosen)
+		auth.GET("/akumulasi", controllers.GetAkumulasi)
+		auth.PUT("/editJadwal", controllers.EditJadwal)
+		auth.PUT("/mengubahakses", controllers.UpdateAkses)
 	}
 	if err := http.ListenAndServe(":"+"8080", r); err != nil {
 		log.Fatal(err)

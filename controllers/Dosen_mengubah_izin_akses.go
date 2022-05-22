@@ -15,6 +15,16 @@ type tanggal struct {
 func UpdateAkses(c *gin.Context) {
 	claims := jwt.ExtractClaims(c)
 	db := c.MustGet("db").(*gorm.DB)
+	//VALIDASI USER
+	var userDosen tabels.Dosen
+	db.Where("nama = ?", claims["id"]).Find(&userDosen)
+	if claims["id"] != userDosen.Nama {
+		c.JSON(400, gin.H{
+			"status":  "error",
+			"message": "anda tidak berhak mengakses halaman ini",
+		})
+		return
+	}
 	var dosen tabels.Dosen
 	db.Where("nama = ?", claims["id"]).Find(&dosen)
 	var tanggal tanggal

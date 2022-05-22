@@ -6,5 +6,5 @@ import (
 
 func main() {
 	middleware.MiddlewareMahasiswa()
-	middleware.MiddlewareMahasiswa()
+	middleware.MiddlewareDosen()
 }

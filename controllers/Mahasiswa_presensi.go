@@ -27,6 +27,16 @@ type jadwal struct {
 func HistoriPresensi(c *gin.Context) {
 	claims := jwt.ExtractClaims(c)
 	db := c.MustGet("db").(*gorm.DB)
+	//VALIDASI USER
+	var userMahasiswa tabels.Mahasiswa
+	db.Where("nama = ?", claims["id"]).Find(&userMahasiswa)
+	if claims["id"] != userMahasiswa.Nama {
+		c.JSON(400, gin.H{
+			"status":  "error",
+			"message": "anda tidak berhak mengakses halaman ini",
+		})
+		return
+	}
 	var presensi []presensi
 	db.Raw("SELECT matakuliah, tanggal FROM sistem_presensi.presensis WHERE nama = ?", claims["id"]).Scan(&presensi)
 	c.JSON(200, gin.H{
@@ -38,6 +48,16 @@ func HistoriPresensi(c *gin.Context) {
 func AkumulasiPresensi(c *gin.Context) {
 	claims := jwt.ExtractClaims(c)
 	db := c.MustGet("db").(*gorm.DB)
+	//VALIDASI USER
+	var userMahasiswa tabels.Mahasiswa
+	db.Where("nama = ?", claims["id"]).Find(&userMahasiswa)
+	if claims["id"] != userMahasiswa.Nama {
+		c.JSON(400, gin.H{
+			"status":  "error",
+			"message": "anda tidak berhak mengakses halaman ini",
+		})
+		return
+	}
 	var akumulation []akumulasi
 	db.Raw("SELECT matakuliah, hadir FROM sistem_presensi.akumulasis WHERE nama = ?", claims["id"]).Scan(&akumulation)
 	c.JSON(200, gin.H{
@@ -49,6 +69,16 @@ func AkumulasiPresensi(c *gin.Context) {
 func CreatePresensi(c *gin.Context) {
 	claims := jwt.ExtractClaims(c)
 	db := c.MustGet("db").(*gorm.DB)
+	//VALIDASI USER
+	var userMahasiswa tabels.Mahasiswa
+	db.Where("nama = ?", claims["id"]).Find(&userMahasiswa)
+	if claims["id"] != userMahasiswa.Nama {
+		c.JSON(400, gin.H{
+			"status":  "error",
+			"message": "anda tidak berhak mengakses halaman ini",
+		})
+		return
+	}
 	var input presensi
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(400, gin.H{
@@ -105,6 +135,16 @@ func CreatePresensi(c *gin.Context) {
 func GetJadwal(c *gin.Context) {
 	claims := jwt.ExtractClaims(c)
 	db := c.MustGet("db").(*gorm.DB)
+	//VALIDASI USER
+	var userMahasiswa tabels.Mahasiswa
+	db.Where("nama = ?", claims["id"]).Find(&userMahasiswa)
+	if claims["id"] != userMahasiswa.Nama {
+		c.JSON(400, gin.H{
+			"status":  "error",
+			"message": "anda tidak berhak mengakses halaman ini",
+		})
+		return
+	}
 	var Krs []tabels.Krs
 	db.Raw("SELECT matakuliah, dosen FROM sistem_presensi.krs WHERE nama = ?", claims["id"]).Scan(&Krs)
 	var Jadwal []interface{}
