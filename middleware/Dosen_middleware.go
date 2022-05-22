@@ -8,18 +8,10 @@ import (
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
 	"mini.com/controllers"
-	"mini.com/dosens"
 	"mini.com/tabels"
 )
 
-type login struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
-}
-
-var IdentityKey = "id"
-
-func MiddlewareMhs() {
+func MiddlewareDosen() {
 	r := gin.Default()
 	db := tabels.SetupModels()
 	r.Use(func(c *gin.Context) {
@@ -27,7 +19,6 @@ func MiddlewareMhs() {
 		c.Next()
 	})
 	var us tabels.User
-	var student tabels.Mahasiswa
 	var teacher tabels.Dosen
 	// the jwt middleware
 	authMiddleware, err := jwt.New(&jwt.GinJWTMiddleware{
@@ -57,17 +48,7 @@ func MiddlewareMhs() {
 			}
 			userID := loginVals.Username
 			password := loginVals.Password
-			db.Where("nama = ?", userID).Where("password = ?", password).Find(&student)
 			db.Where("nama = ?", userID).Where("password = ?", password).Find(&teacher)
-
-			if userID == student.Nama && password == student.Password {
-				us.UserName = student.Nama
-				return &tabels.User{
-					UserName:  userID,
-					LastName:  "Bo-Yi",
-					FirstName: "Wu",
-				}, nil
-			}
 			if userID == teacher.Nama && password == teacher.Password {
 				us.UserName = teacher.Nama
 				return &tabels.User{
@@ -127,26 +108,16 @@ func MiddlewareMhs() {
 		log.Printf("NoRoute claims: %#v\n", claims)
 		c.JSON(404, gin.H{"code": "PAGE_NOT_FOUND", "message": "Page not found"})
 	})
-	auth := r.Group("/mahasiswa")
-	// Refresh time can be longer than token timeout
-	auth.GET("/refresh_token", authMiddleware.RefreshHandler)
-	auth.Use(authMiddleware.MiddlewareFunc())
-	{
-		auth.GET("/historiPresensi", controllers.HistoriPresensi)
-		auth.GET("/akumulasiPresensi", controllers.AkumulasiPresensi)
-		auth.POST("/presensi", controllers.CreatePresensi)
-		auth.GET("/jadwal", controllers.GetJadwal)
-	}
 	author := r.Group("/dosen")
 	// Refresh time can be longer than token timeout
 	author.GET("/refresh_token", authMiddleware.RefreshHandler)
 	author.Use(authMiddleware.MiddlewareFunc())
 	{
-		author.GET("/melihatpresensi", dosens.MelihatPresensi)
-		author.GET("/melihatjadwal", dosens.GetJadwalDosen)
-		author.GET("/akumulasi", dosens.GetAkumulasi)
-		author.PUT("/editJadwal", dosens.EditJadwal)
-		author.PUT("/mengubahakses", dosens.UpdateAkses)
+		author.GET("/melihatpresensi", controllers.MelihatPresensi)
+		author.GET("/melihatjadwal", controllers.GetJadwalDosen)
+		author.GET("/akumulasi", controllers.GetAkumulasi)
+		author.PUT("/editJadwal", controllers.EditJadwal)
+		author.PUT("/mengubahakses", controllers.UpdateAkses)
 	}
 	if err := http.ListenAndServe(":"+"8080", r); err != nil {
 		log.Fatal(err)

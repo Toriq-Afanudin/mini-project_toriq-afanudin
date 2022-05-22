@@ -1,4 +1,4 @@
-package dosens
+package controllers
 
 import (
 	jwt "github.com/appleboy/gin-jwt/v2"
